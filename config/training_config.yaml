@@ -1,0 +1,66 @@
+# Training Configuration for Two Tower Model
+
+# Model parameters
+model:
+  embedding_dim: 128
+  user_hidden_dims: [256, 128]
+  item_hidden_dims: [256, 128]
+  dropout_rate: 0.2
+  text_feature_dim: 768
+
+# Training parameters
+training:
+  epochs: 100
+  batch_size: 256
+  learning_rate: 0.001
+  weight_decay: 1e-5
+  optimizer: "adam"  # adam, sgd
+  scheduler: "cosine"  # step, cosine, none
+  grad_clip_norm: 1.0
+  early_stopping_patience: 10
+
+# Data parameters
+data:
+  user_features:
+    - "user_id"
+    - "age_group"
+    - "gender"
+    - "location"
+  item_features:
+    - "item_id"
+    - "category"
+    - "brand"
+    - "price_range"
+  text_feature_columns:
+    - "title"
+    - "description"
+  target_column: "rating"
+  max_sequence_length: 50
+
+# Evaluation parameters
+evaluation:
+  k_values: [5, 10, 20, 50]
+  metrics:
+    - "mse"
+    - "rmse"
+    - "mae"
+    - "r2"
+    - "precision"
+    - "recall"
+    - "ndcg"
+    - "hit_rate"
+    - "coverage"
+
+# Paths
+paths:
+  data_dir: "data"
+  model_dir: "results/models"
+  log_dir: "logs"
+  plot_dir: "results/plots"
+  metrics_dir: "results/metrics"
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/training.log"
