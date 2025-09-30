@@ -1,5 +1,27 @@
 """
 Training utilities for Two Tower Model
+
+Trainer Input/Output:
+====================
+Input:
+- model: TwoTowerModel - The two-tower model to train
+- train_loader: DataLoader - Training data with positive/negative samples
+- val_loader: DataLoader - Validation data
+- config: dict - Training configuration
+
+Output:
+- training_results: dict - Training results including losses and metrics
+  {
+      'train_losses': List[float],
+      'val_losses': List[float], 
+      'val_metrics': List[dict],
+      'best_val_loss': float
+  }
+
+Example:
+--------
+trainer = TwoTowerTrainer(model, train_loader, val_loader, config)
+results = trainer.train()
 """
 
 import torch
@@ -93,7 +115,7 @@ class TwoTowerTrainer:
             return None
     
     def train_epoch(self) -> float:
-        """Train for one epoch"""
+        """Train for one epoch using positive-negative samples"""
         self.model.train()
         total_loss = 0.0
         num_batches = 0
@@ -111,16 +133,10 @@ class TwoTowerTrainer:
                 text_features=batch['text_features']
             )
             
-            # Compute similarity scores
-            similarity_scores = self.model.compute_similarity(
-                user_embeddings, item_embeddings
+            # Compute positive-negative loss
+            loss = self._compute_positive_negative_loss(
+                user_embeddings, item_embeddings, batch['labels']
             )
-            
-            # Compute loss (simplified - in practice, you'd use more sophisticated loss)
-            # For now, we'll use a simple MSE loss between similarity and target
-            batch_size = similarity_scores.size(0)
-            targets = batch['targets'].unsqueeze(1).expand(-1, batch_size)
-            loss = self.criterion(similarity_scores, targets)
             
             # Backward pass
             self.optimizer.zero_grad()
@@ -204,9 +220,8 @@ class TwoTowerTrainer:
         
         # Move other tensors
         device_batch['text_features'] = batch['text_features'].to(self.device)
-        device_batch['targets'] = batch['targets'].to(self.device)
-        device_batch['user_ids'] = batch['user_ids']
-        device_batch['item_ids'] = batch['item_ids']
+        device_batch['labels'] = batch['labels'].to(self.device)
+        device_batch['ratings'] = batch['ratings'].to(self.device)
         
         return device_batch
     
@@ -320,3 +335,17 @@ class TwoTowerTrainer:
         self.val_metrics = checkpoint.get('val_metrics', [])
         
         logger.info(f"Model loaded from {path}")
+    
+    
+    def _compute_positive_negative_loss(self, 
+                                      user_emb: torch.Tensor, 
+                                      item_emb: torch.Tensor, 
+                                      labels: torch.Tensor) -> torch.Tensor:
+        """Compute positive-negative sample loss"""
+        # Compute similarity scores
+        similarity = torch.sum(user_emb * item_emb, dim=1)  # [batch_size]
+        
+        # Binary cross entropy loss
+        loss = F.binary_cross_entropy_with_logits(similarity, labels)
+        
+        return loss

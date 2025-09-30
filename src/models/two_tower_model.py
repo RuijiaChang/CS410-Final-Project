@@ -5,6 +5,22 @@ This module implements the two-tower architecture where:
 - User Tower: Encodes user features and behavior into user embeddings
 - Item Tower: Encodes item features into item embeddings
 - Similarity: Computes cosine similarity between user and item embeddings
+
+Model Input/Output:
+==================
+Input:
+- user_features: Dict[str, torch.Tensor] - User feature tensors
+- item_features: Dict[str, torch.Tensor] - Item feature tensors  
+- text_features: torch.Tensor - Text embeddings (768-dim)
+
+Output:
+- user_embeddings: torch.Tensor - User embeddings (batch_size, embedding_dim)
+- item_embeddings: torch.Tensor - Item embeddings (batch_size, embedding_dim)
+
+Example:
+--------
+user_emb, item_emb = model(user_features, item_features, text_features)
+similarity = model.compute_similarity(user_emb, item_emb)
 """
 
 import torch
