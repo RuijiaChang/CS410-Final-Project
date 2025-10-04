@@ -1,0 +1,7 @@
+data/raw/*
+data/interim/*
+data/processed/*
+data/artifacts/*
+!data/sample/**
+.venv/
+.DS_Store
