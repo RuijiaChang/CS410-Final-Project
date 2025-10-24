@@ -1,4 +1,3 @@
-# shrink_by_category.py
 import argparse, glob, os, math
 from pathlib import Path
 from typing import List

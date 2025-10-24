@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Stream-shrink Amazon Reviews to Parquet shards (keep ALL fields).
 - Prefer parent_asin as item id (fallback to asin).

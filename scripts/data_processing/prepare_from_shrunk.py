@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Prepare a loader-friendly CSV and item meta from all_categories_shrunk.parquet
 
