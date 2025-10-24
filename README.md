@@ -58,3 +58,5 @@ Amazon_Recommender_using_Two_Tower_Recall/
     
 
 ```
+## Project Data
+You may access processed data through: https://drive.google.com/drive/folders/1quw2GHT3HVsxjggTk5cxptcokzgRHLkZ?usp=sharing
