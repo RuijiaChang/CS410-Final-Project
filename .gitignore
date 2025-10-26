@@ -2,6 +2,9 @@ data/raw/*
 data/interim/*
 data/processed/*
 data/artifacts/*
+data/embeddings/*
+data/*
 !data/sample/**
 .venv/
 .DS_Store
+scripts/data_processing/embeddings_analysis.py
