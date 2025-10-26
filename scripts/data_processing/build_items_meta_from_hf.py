@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 build_items_meta_from_hf.py
 -------------------------------------------------------
