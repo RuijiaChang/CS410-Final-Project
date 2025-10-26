@@ -44,368 +44,320 @@ batch = {
 }
 
 """
-from __future__ import annotations
-import os, json, ast
-from typing import Dict, List, Optional, Tuple, Callable, Union
+
+import json
+from pathlib import Path
+from typing import Dict, List, Tuple, Optional
+import random
+
 import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-# ---------------- utils ----------------
+# -----------------------------
+# Path & IO helpers
+# -----------------------------
+def _P(p: str) -> Path:
+    path = Path(p)
+    return path if path.exists() else Path.cwd() / p
 
-def _read_table(path: str) -> pd.DataFrame:
-    return pd.read_parquet(path) if path.endswith(".parquet") else pd.read_csv(path)
+def _dir_of(p: str) -> Path:
+    q = _P(p)
+    return q if q.is_dir() else q.parent
 
-def _as_long(x) -> torch.LongTensor:
-    return torch.as_tensor(x, dtype=torch.long)
+def _read_json(p: Path):
+    with open(p, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-def _as_float(x) -> torch.FloatTensor:
-    return torch.as_tensor(x, dtype=torch.float32)
-
-def parse_vec(cell) -> Optional[np.ndarray]:
-    if cell is None or (isinstance(cell, float) and np.isnan(cell)): return None
-    if isinstance(cell, (list, tuple, np.ndarray)):
-        arr = np.asarray(cell, dtype=np.float32)
-        return arr
-    s = str(cell).strip()
-    if not s: return None
-    # JSON / Python list / CSV
-    for parser in (lambda z: json.loads(z), lambda z: ast.literal_eval(z), lambda z: [float(x) for x in z.split(",")]):
-        try:
-            arr = np.asarray(parser(s), dtype=np.float32)
-            return arr
-        except Exception:
-            continue
-    return None
-
-# -------------- categorical encoders --------------
-
-class CatEncoder:
-    def __init__(self, name: str, stoi: Dict[str, int], unk_idx: int = 0):
-        self.name, self.stoi, self.unk_idx = name, stoi, unk_idx
-
-    @classmethod
-    def fit(cls, values: pd.Series, name: str, add_unk=True) -> "CatEncoder":
-        uniq = pd.Series(values.astype(str).fillna("")).unique().tolist()
-        stoi, idx = ({}, 0)
-        if add_unk:
-            stoi["<UNK>"] = 0; idx = 1
-        for v in uniq:
-            if v == "" and add_unk: continue
-            stoi[str(v)] = idx; idx += 1
-        return cls(name, stoi, 0 if add_unk else -1)
-
-    def encode(self, s: pd.Series) -> np.ndarray:
-        def f(v):
-            v = "" if pd.isna(v) else str(v)
-            return self.stoi.get(v, self.unk_idx if self.unk_idx >= 0 else 0)
-        return s.astype(str).map(f).astype(np.int64).to_numpy()
-
-    def to_json(self): return {"name": self.name, "stoi": self.stoi, "unk_idx": self.unk_idx}
-    @classmethod
-    def from_json(cls, d): return cls(d["name"], d["stoi"], d.get("unk_idx", 0))
-
-# -------------- text encoder (optional) --------------
-
-def build_text_encoder(model_name="sentence-transformers/all-mpnet-base-v2") -> Callable[[List[str]], np.ndarray]:
-    from sentence_transformers import SentenceTransformer
-    model = SentenceTransformer(model_name)
-    dim = model.get_sentence_embedding_dimension()
-    if dim != 768:
-        print(f"[warn] text encoder dim {dim} != 768; will still proceed.")
-    def encode(texts: List[str]) -> np.ndarray:
-        if not texts: return np.zeros((0, dim), dtype=np.float32)
-        emb = model.encode(texts, show_progress_bar=False, convert_to_numpy=True, normalize_embeddings=True)
-        return emb.astype(np.float32)
-    return encode
-
-# -------------- dataset --------------
-
-class InteractionsDataset(Dataset):
-    """Holds positive rows; negatives are created in collate_fn."""
-    def __init__(self, df: pd.DataFrame, cfg: Dict,
-                 user_enc: Dict[str, CatEncoder], item_enc: Dict[str, CatEncoder],
-                 item_lookup: Dict[str, Dict[str, str]],
-                 item_text_map: Dict[str, np.ndarray],
-                 user_pos: Dict[str, set],
-                 all_item_ids: np.ndarray,
-                 item_numeric_map: Optional[Dict[str, np.ndarray]] = None,
-                 user_profile_map: Optional[Dict[str, np.ndarray]] = None):
+# -----------------------------
+# Dataset
+# -----------------------------
+class InteractionDataset(Dataset):
+    """
+    Yield: (user_features, item_features, text_features[emb], labels, ratings)
+    Train: on-the-fly negative sampling with ratio=neg_ratio
+    Val/Test: positives only
+    """
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        row_ids: List[int],
+        uid2idx: Dict[str, int],
+        iid2idx: Dict[str, int],
+        item_text_emb: Dict[str, List[float]],
+        cate2idx: Dict[str, int],
+        brand2idx: Dict[str, int],
+        mode: str = "train",
+        neg_ratio: int = 0,
+        seed: int = 42,
+        emb_dim: int = 768,
+    ):
         self.df = df.reset_index(drop=True)
-        self.cfg = cfg
-        self.user_enc, self.item_enc = user_enc, item_enc
-        self.item_lookup = item_lookup
-        self.item_text_map = item_text_map
-        self.item_numeric_map = item_numeric_map
-        self.user_profile_map = user_profile_map
-        self.user_cols = cfg["user_features"]
-        self.item_cols = cfg["item_features"]
-        self.neg_ratio = int(cfg.get("neg_ratio", 1))
-        self.rng = np.random.default_rng(int(cfg.get("seed", 42)))
+        self.rows = row_ids
+        self.uid2idx = {str(k): int(v) for k, v in uid2idx.items()}
+        self.iid2idx = {str(k): int(v) for k, v in iid2idx.items()}
+        self.item_text_emb = {str(k): v for k, v in item_text_emb.items()}
+        self.cate2idx = cate2idx
+        self.brand2idx = brand2idx
+        self.mode = mode
+        self.neg_ratio = max(0, int(neg_ratio))
+        self.rng = random.Random(seed)
+        self.emb_dim = emb_dim
+        self._zero = torch.zeros(self.emb_dim, dtype=torch.float32)
 
-        # cache encoded positives
-        self._user = self.df["user_id"].astype(str).to_numpy()
-        self._item = self.df["item_id"].astype(str).to_numpy()
-        self._rating = self.df.get("rating", pd.Series([1.0]*len(self.df))).astype(float).to_numpy()
-        self._user_feats = {c: user_enc[c].encode(self.df[c]) for c in self.user_cols}
-        self._item_feats = {c: item_enc[c].encode(self.df[c]) for c in self.item_cols}
-        self.user_pos = user_pos
-        self.all_items = all_item_ids
+        # user positives set for rejection sampling
+        self.user_pos = self.df.groupby("user_id")["item_id"].apply(lambda s: set(s.astype(str))).to_dict()
+        self.all_items = list(self.iid2idx.keys())
 
-    def __len__(self): return len(self.df)
-    def __getitem__(self, idx): return idx
-
-def make_collate_fn(ds: InteractionsDataset,
-                    text_dim=768,
-                    num_item_numeric: int = 0,
-                    has_user_profile: bool = False) -> Callable:
-
-    def collate(indices: List[int]) -> Dict[str, torch.Tensor]:
-        Bp = len(indices)                                  # positives
-        total = Bp * (1 + ds.neg_ratio)
-
-        # containers
-        uf = {c: np.zeros(total, dtype=np.int64) for c in ds.user_cols}
-        itf = {c: np.zeros(total, dtype=np.int64) for c in ds.item_cols}
-        text = np.zeros((total, text_dim), dtype=np.float32)
-        labels = np.zeros(total, dtype=np.int64)
-        ratings = np.zeros(total, dtype=np.float32)
-        if num_item_numeric > 0:
-            item_numeric = np.zeros((total, num_item_numeric), dtype=np.float32)
+        # expand indices if training with negatives
+        if self.mode == "train" and self.neg_ratio > 0:
+            expanded = []
+            for rid in self.rows:
+                expanded.append((rid, 1))
+                for _ in range(self.neg_ratio):
+                    expanded.append((rid, 0))
+            self.sample_index = expanded
         else:
-            item_numeric = None
-        if has_user_profile:
-            user_prof = np.zeros((total, 768), dtype=np.float32)
+            self.sample_index = [(rid, 1) for rid in self.rows]
+
+    def __len__(self):
+        return len(self.sample_index)
+
+    def _sample_neg_item(self, uid: str) -> str:
+        pos = self.user_pos.get(uid, set())
+        while True:
+            iid = self.rng.choice(self.all_items)
+            if iid not in pos:
+                return iid
+
+    def _encode(self, uid: str, iid: str, rating: float, category: str, brand: str, label: int):
+        user_feats = {
+            "user_id": torch.tensor(self.uid2idx[str(uid)], dtype=torch.long)
+        }
+        item_feats = {
+            "item_id": torch.tensor(self.iid2idx[str(iid)], dtype=torch.long),
+            "category": torch.tensor(self.cate2idx.get(str(category), 0), dtype=torch.long),
+            "brand": torch.tensor(self.brand2idx.get(str(brand), 0), dtype=torch.long),
+        }
+        emb = self.item_text_emb.get(str(iid))
+        text_feats = torch.tensor(emb, dtype=torch.float32) if emb is not None else self._zero
+        labels = torch.tensor(label, dtype=torch.long)
+        ratings = torch.tensor(rating if label == 1 else 0.0, dtype=torch.float32)
+        return user_feats, item_feats, text_feats, labels, ratings
+
+    def __getitem__(self, idx: int):
+        rid, is_pos = self.sample_index[idx]
+        row = self.df.iloc[rid]
+        uid = str(row["user_id"])
+        rating = float(row.get("rating", 1.0))
+        category = row.get("category", "Unknown")
+        brand = row.get("brand", "Unknown")
+
+        if is_pos == 1:
+            iid = str(row["item_id"])
+            return self._encode(uid, iid, rating, category, brand, 1)
         else:
-            user_prof = None
+            iid = self._sample_neg_item(uid)
+            return self._encode(uid, iid, 0.0, "Unknown", "Unknown", 0)
 
-        w = 0
-        for idx in indices:
-            uid = ds._user[idx]; iid = ds._item[idx]
-            # positive
-            for c in ds.user_cols: uf[c][w] = ds._user_feats[c][idx]
-            for c in ds.item_cols: itf[c][w] = ds._item_feats[c][idx]
-            emb = ds.item_text_map.get(iid);  text[w] = emb if emb is not None and emb.shape[0]==text_dim else 0.0
-            if item_numeric is not None:
-                item_numeric[w] = ds.item_numeric_map.get(iid, 0.0)
-            if user_prof is not None:
-                user_prof[w] = ds.user_profile_map.get(uid, 0.0)
-            labels[w] = 1; ratings[w] = ds._rating[idx]; w += 1
+# -----------------------------
+# Collate & Loader
+# -----------------------------
+def _collate(samples):
+    user_b, item_b = {}, {}
+    t_list, y_list, r_list = [], [], []
 
-            # negatives
-            pos_set = ds.user_pos.get(uid, set())
-            need, tries = ds.neg_ratio, 0
-            while need > 0 and tries < need * 50:
-                cand = str(ds.rng.choice(ds.all_items))
-                tries += 1
-                if cand in pos_set: continue
-                # copy user feats
-                for c in ds.user_cols: uf[c][w] = ds._user_feats[c][idx]
-                # item feats by lookup
-                row = ds.item_lookup.get(cand)
-                if row is None: continue
-                for c in ds.item_cols:
-                    val = row.get(c, "")
-                    itf[c][w] = ds.item_enc[c].stoi.get(str(val), ds.item_enc[c].unk_idx)
-                emb = ds.item_text_map.get(cand); text[w] = emb if emb is not None and emb.shape[0]==text_dim else 0.0
-                if item_numeric is not None:
-                    item_numeric[w] = ds.item_numeric_map.get(cand, 0.0)
-                if user_prof is not None:
-                    user_prof[w] = ds.user_profile_map.get(uid, 0.0)
-                labels[w] = 0; ratings[w] = 0.0; w += 1; need -= 1
+    u_keys = set().union(*(s[0].keys() for s in samples))
+    i_keys = set().union(*(s[1].keys() for s in samples))
 
-        # trim
-        uf = {k: v[:w] for k, v in uf.items()}
-        itf = {k: v[:w] for k, v in itf.items()}
-        batch = {
-            "user_features": {k: _as_long(v) for k, v in uf.items()},
-            "item_features": {k: _as_long(v) for k, v in itf.items()},
-            "text_features": _as_float(text[:w]),
-            "labels": _as_long(labels[:w]),
-            "ratings": _as_float(ratings[:w]),
-        }
-        if item_numeric is not None:
-            batch["item_numeric"] = _as_float(item_numeric[:w])
-        if user_prof is not None:
-            batch["user_profile_emb"] = _as_float(user_prof[:w])
-        return batch
-    return collate
+    for u, it, t, y, r in samples:
+        for k in u_keys: user_b.setdefault(k, []).append(u[k])
+        for k in i_keys: item_b.setdefault(k, []).append(it[k])
+        t_list.append(t); y_list.append(y); r_list.append(r)
 
-# -------------- high-level factory --------------
+    for k in list(user_b.keys()): user_b[k] = torch.stack(user_b[k], 0)
+    for k in list(item_b.keys()): item_b[k] = torch.stack(item_b[k], 0)
+    text_features = torch.stack(t_list, 0)
+    labels = torch.stack(y_list, 0)
+    ratings = torch.stack(r_list, 0)
 
-def build_dataloaders(
-    data_path: str,
-    config: Dict,
-    encoders_json: Optional[str] = None,
-    text_encoder_fn: Optional[Callable[[List[str]], np.ndarray]] = None,
-) -> Tuple[DataLoader, Optional[DataLoader], Optional[DataLoader], Dict]:
-    """
-    config:
-      user_features: ["user_id", ...]
-      item_features: ["item_id", "category", "brand", ...]
-      text_feature_columns: ["title", "text"]     # OR:
-      text_embedding_col: "item_text_emb"        # Jenny’s part (length = 768)
-      item_numeric_features: ["price","discount_pct"]  (optional, Jenny’s part)
-      numeric_scaler_path: "data/final/scalers.json"   (optional)
-      user_profile_emb_col: "user_text_emb"            (optional, Jenny’s part; 768)
-      batch_size: 1024
-      neg_ratio: 1
-      num_workers: 4
-      shuffle: true
-      split: {"train":0.85,"valid":0.05}  # optional; default = temporal LOO by 'timestamp'
-      timestamp_col: "timestamp"
-      seed: 42
-    """
-    df = _read_table(data_path).copy()
-    assert "user_id" in df.columns and "item_id" in df.columns, "data must contain user_id & item_id"
-    if "rating" not in df.columns: df["rating"] = 1.0
-    ts_col = config.get("timestamp_col", "timestamp")
-    seed = int(config.get("seed", 42))
-    rng = np.random.default_rng(seed)
-
-    # ----- split -----
-    split_cfg = config.get("split")
-    if split_cfg is None:
-        df = df.sort_values(["user_id", ts_col])
-        rid = np.arange(len(df)); df["_rid"] = rid
-        train_idx, valid_idx, test_idx = [], [], []
-        for uid, g in df.groupby("user_id", sort=False):
-            g = g.sort_values(ts_col)
-            r = g["_rid"].to_numpy()
-            if len(r)==1: test_idx.append(r[-1])
-            elif len(r)==2: valid_idx.append(r[-2]); test_idx.append(r[-1])
-            else: train_idx.extend(r[:-2]); valid_idx.append(r[-2]); test_idx.append(r[-1])
-        df.drop(columns=["_rid"], inplace=True)
-    else:
-        idx = np.arange(len(df)); rng.shuffle(idx)
-        n_tr = int(len(idx) * split_cfg.get("train", 0.85))
-        n_va = int(len(idx) * split_cfg.get("valid", 0.05))
-        train_idx = idx[:n_tr].tolist()
-        valid_idx = idx[n_tr:n_tr+n_va].tolist()
-        test_idx  = idx[n_tr+n_va:].tolist()
-
-    # ----- fit/load encoders on TRAIN -----
-    user_cols = config["user_features"]
-    item_cols = config["item_features"]
-    user_enc, item_enc = {}, {}
-
-    if encoders_json and os.path.exists(encoders_json):
-        blob = json.load(open(encoders_json, "r", encoding="utf-8"))
-        user_enc = {k: CatEncoder.from_json(v) for k, v in blob["user"].items()}
-        item_enc = {k: CatEncoder.from_json(v) for k, v in blob["item"].items()}
-    else:
-        dtr = df.iloc[train_idx]
-        for c in user_cols: user_enc[c] = CatEncoder.fit(dtr[c], c)
-        for c in item_cols: item_enc[c] = CatEncoder.fit(dtr[c], c)
-        if encoders_json:
-            json.dump({"user":{k:v.to_json() for k,v in user_enc.items()},
-                       "item":{k:v.to_json() for k,v in item_enc.items()}},
-                      open(encoders_json, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
-
-    # ----- item lookup -----
-    item_keys = ["item_id"] + [c for c in item_cols if c!="item_id"]
-    item_tbl = df[item_keys].drop_duplicates("item_id", keep="last")
-    item_lookup = { str(r["item_id"]): {c: r.get(c, "") for c in item_cols} for _, r in item_tbl.iterrows() }
-    all_item_ids = item_tbl["item_id"].astype(str).to_numpy()
-
-    # ----- item text embeddings -----
-    text_map: Dict[str, np.ndarray] = {}
-    emb_col = config.get("text_embedding_col")
-    text_cols = config.get("text_feature_columns", None)
-    if emb_col and emb_col in df.columns:
-        for _, r in item_tbl.iterrows():
-            vec = parse_vec(r.get(emb_col))
-            if vec is None: continue
-            v = np.zeros(768, dtype=np.float32); v[:min(768, vec.shape[0])] = vec[:min(768, vec.shape[0])]
-            text_map[str(r["item_id"])] = v
-    else:
-        if text_cols is None: text_cols = []
-        if text_cols:
-            if text_encoder_fn is None:
-                text_encoder_fn = build_text_encoder("sentence-transformers/all-mpnet-base-v2")
-            texts, ids = [], []
-            for _, r in item_tbl.iterrows():
-                parts = [str(r.get(c, "")) for c in text_cols if pd.notna(r.get(c, ""))]
-                texts.append(" [SEP] ".join([p for p in parts if p]))
-                ids.append(str(r["item_id"]))
-            embs = text_encoder_fn(texts) if texts else np.zeros((0, 768), dtype=np.float32)
-            for iid, e in zip(ids, embs):
-                text_map[iid] = e.astype(np.float32)
-
-    # ----- optional: numeric features (Jenny’s part) -----
-    num_cols = config.get("item_numeric_features", []) or []
-    scalers = {}
-    sp = config.get("numeric_scaler_path")
-    if num_cols and sp and os.path.exists(sp):
-        scalers = json.load(open(sp, "r", encoding="utf-8"))
-
-    def standardize(col, val):
-        if col in scalers:
-            m = float(scalers[col].get("mean", 0.0))
-            s = max(float(scalers[col].get("std", 1.0)), 1e-6)
-            return (float(val) - m) / s
-        return float(val)
-
-    item_numeric_map = {}
-    if num_cols:
-        for _, r in item_tbl.iterrows():
-            iid = str(r["item_id"])
-            vec = [standardize(c, r.get(c, 0.0)) for c in num_cols]
-            item_numeric_map[iid] = np.asarray(vec, dtype=np.float32)
-
-    # ----- optional: user profile embedding (Jenny’s part, 768) -----
-    user_profile_map = {}
-    up_col = config.get("user_profile_emb_col")
-    if up_col and up_col in df.columns:
-        # Expect the data_path already contains this column (or you can load/merge an external user_profile.parquet)
-        for uid, sub in df[["user_id", up_col]].drop_duplicates("user_id").iterrows():
-            v = parse_vec(sub[up_col])
-            if v is not None:
-                t = np.zeros(768, dtype=np.float32); t[:min(768, v.shape[0])] = v[:min(768, v.shape[0])]
-                user_profile_map[str(sub["user_id"])] = t
-
-    # ----- user -> positive items -----
-    user_pos = { str(uid): set(g["item_id"].astype(str)) for uid, g in df.groupby("user_id", sort=False) }
-
-    # ----- build datasets/loaders -----
-    def _make_loader(indices: List[int], shuffle: bool) -> DataLoader:
-        sub = df.iloc[indices].copy()
-        ds = InteractionsDataset(
-            sub, config, user_enc, item_enc, item_lookup,
-            text_map, user_pos, all_item_ids,
-            item_numeric_map=item_numeric_map if num_cols else None,
-            user_profile_map=user_profile_map if up_col else None,
-        )
-        collate = make_collate_fn(
-            ds,
-            text_dim=768,
-            num_item_numeric=len(num_cols),
-            has_user_profile=bool(up_col)
-        )
-        return DataLoader(
-            ds,
-            batch_size=int(config.get("batch_size", 1024)),
-            shuffle=shuffle,
-            num_workers=int(config.get("num_workers", 4)),
-            pin_memory=True,
-            collate_fn=collate,
-        )
-
-    train_loader = _make_loader(train_idx, shuffle=bool(config.get("shuffle", True)))
-    valid_loader = _make_loader(valid_idx, shuffle=False) if len(valid_idx) else None
-    test_loader  = _make_loader(test_idx,  shuffle=False) if len(test_idx) else None
-
-    artifacts = {
-        "user_encoders": {k: v.to_json() for k, v in user_enc.items()},
-        "item_encoders": {k: v.to_json() for k, v in item_enc.items()},
-        "num_users": len(user_enc.get("user_id", CatEncoder("user_id", {})).stoi),
-        "num_items": len(item_enc.get("item_id", CatEncoder("item_id", {})).stoi),
-        "feature_info": {
-            "user": config["user_features"],
-            "item": config["item_features"],
-            "item_numeric": num_cols,
-            "has_user_profile": bool(up_col),
-        }
+    return {
+        "user_features": user_b,
+        "item_features": item_b,
+        "text_features": text_features,  # (B, 768)
+        "labels": labels,
+        "targets": labels,               # alias for eval code
+        "ratings": ratings,
     }
-    return train_loader, valid_loader, test_loader, artifacts
+
+def create_data_loader(dataset: Dataset, batch_size: int, shuffle: bool) -> DataLoader:
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=_collate, num_workers=0)
+
+# -----------------------------
+# Processor
+# -----------------------------
+class DataProcessor:
+    """
+    Minimal processor for your structure:
+
+    project/
+      data/processed/
+        interactions_mapped.parquet
+        uid2idx.json
+        iid2idx.json
+        splits.json
+        negative.json (or negatives.json)  # optional
+        items_text_emb_*.json
+    """
+    def __init__(self, data_cfg: Dict):
+        self.cfg = data_cfg or {}
+        self.neg_ratio = int(self.cfg.get("neg_ratio", 0))
+        self.seed = int(self.cfg.get("seed", 42))
+        self.emb_dim = int(self.cfg.get("emb_dim", 768))
+        self.data_path = self.cfg.get("data_path", "data/processed")
+        self.text_embedding_path = self.cfg.get("text_embedding_path", None)
+
+        self.user_feature_dims: Dict[str, int] = {}
+        self.item_feature_dims: Dict[str, int] = {}
+        self.eval_negatives: Optional[Dict] = None  # {valid: [...], test: [...]}
+
+    # ---- loaders ----
+    def _load_core(self, base: Path) -> Tuple[pd.DataFrame, Optional[Dict[str, List[int]]]]:
+        inter = base / "interactions_mapped.parquet"
+        fallback_csv = base / "loader_ready.csv"
+        splits_p = base / "splits.json"
+
+        if inter.exists():
+            df = pd.read_parquet(inter)
+        elif fallback_csv.exists():
+            df = pd.read_csv(fallback_csv)
+        else:
+            raise FileNotFoundError(f"Expected {inter} or {fallback_csv}")
+
+        splits = _read_json(splits_p) if splits_p.exists() else None
+        return df, splits
+
+    def _load_id_maps(self, base: Path, df: pd.DataFrame):
+        uid_p = base / "uid2idx.json"
+        iid_p = base / "iid2idx.json"
+        if uid_p.exists() and iid_p.exists():
+            uid2idx = _read_json(uid_p)
+            iid2idx = _read_json(iid_p)
+        else:
+            # fallback build
+            users = sorted(df["user_id"].astype(str).unique())
+            items = sorted(df["item_id"].astype(str).unique())
+            uid2idx = {u: i for i, u in enumerate(users)}
+            iid2idx = {v: i for i, v in enumerate(items)}
+        uid2idx = {str(k): int(v) for k, v in uid2idx.items()}
+        iid2idx = {str(k): int(v) for k, v in iid2idx.items()}
+        return uid2idx, iid2idx
+
+    def _load_embeddings(self, base: Path) -> Dict[str, List[float]]:
+        if self.text_embedding_path:
+            p = _P(self.text_embedding_path)
+            if not p.exists():
+                raise FileNotFoundError(f"text_embedding_path not found: {p}")
+            return _read_json(p)
+        # default: find one under processed
+        cands = sorted(base.glob("items_text_emb_*.json"))
+        if not cands:
+            raise FileNotFoundError(f"No items_text_emb_*.json found under {base}")
+        return _read_json(cands[0])
+
+    def _maybe_load_eval_negs(self, base: Path) -> Optional[Dict]:
+        # support negative.json or negatives.json
+        for name in ("negative.json", "negatives.json"):
+            p = base / name
+            if p.exists():
+                return _read_json(p)
+        return None
+
+    def _build_splits_if_missing(self, df: pd.DataFrame) -> Dict[str, List[int]]:
+        df2 = df.copy()
+        if "timestamp" in df2.columns:
+            df2 = df2.sort_values(["user_id", "timestamp"]).reset_index(drop=True)
+        else:
+            df2 = df2.sort_values(["user_id"]).reset_index(drop=True)
+        df2["_rid"] = np.arange(len(df2))
+        sp = {"train": [], "valid": [], "test": []}
+        for _, g in df2.groupby("user_id", sort=False):
+            r = g["_rid"].tolist()
+            if len(r) == 1:
+                sp["test"].append(r[-1])
+            elif len(r) == 2:
+                sp["valid"].append(r[-2]); sp["test"].append(r[-1])
+            else:
+                sp["train"].extend(r[:-2]); sp["valid"].append(r[-2]); sp["test"].append(r[-1])
+        return sp
+
+    # ---- public ----
+    def process_data(self, data_path: Optional[str] = None) -> Tuple[Dataset, Dataset, Dataset]:
+        base = _dir_of(data_path or self.data_path)  # .../data/processed
+        print(f"[DataProcessor] base_dir = {base}")
+
+        # 1) interactions & splits
+        df, splits = self._load_core(base)
+        # normalize columns
+        for c in ("user_id", "item_id"):
+            if c not in df.columns:
+                raise ValueError(f"`{c}` column is required in interactions.")
+        df["user_id"] = df["user_id"].astype(str)
+        df["item_id"] = df["item_id"].astype(str)
+        if "rating" not in df.columns: df["rating"] = 1.0
+        if "category" not in df.columns: df["category"] = "Unknown"
+        if "brand" not in df.columns: df["brand"] = "Unknown"
+
+        # 2) id maps
+        uid2idx, iid2idx = self._load_id_maps(base, df)
+
+        # 3) embeddings
+        emb = self._load_embeddings(base)
+        emb = {str(k): v for k, v in emb.items()}
+        # infer dim
+        try:
+            first_vec = next(iter(emb.values()))
+            if isinstance(first_vec, list): self.emb_dim = len(first_vec)
+        except StopIteration:
+            pass
+
+        # 4) splits
+        if splits is None:
+            splits = self._build_splits_if_missing(df)
+
+        # 5) vocabs
+        cate2idx = {c: i for i, c in enumerate(sorted(df["category"].fillna("Unknown").astype(str).unique()))}
+        brand2idx = {b: i for i, b in enumerate(sorted(df["brand"].fillna("Unknown").astype(str).unique()))}
+
+        # 6) datasets
+        train_ds = InteractionDataset(
+            df, splits["train"], uid2idx, iid2idx, emb,
+            cate2idx, brand2idx, mode="train",
+            neg_ratio=self.neg_ratio, seed=self.seed, emb_dim=self.emb_dim
+        )
+        val_ds = InteractionDataset(
+            df, splits["valid"], uid2idx, iid2idx, emb,
+            cate2idx, brand2idx, mode="valid",
+            neg_ratio=0, seed=self.seed, emb_dim=self.emb_dim
+        )
+        test_ds = InteractionDataset(
+            df, splits["test"], uid2idx, iid2idx, emb,
+            cate2idx, brand2idx, mode="test",
+            neg_ratio=0, seed=self.seed, emb_dim=self.emb_dim
+        )
+
+        # 7) feature dims exposed for model init
+        self.user_feature_dims = {"user_id": len(uid2idx)}
+        self.item_feature_dims = {"item_id": len(iid2idx), "category": len(cate2idx), "brand": len(brand2idx)}
+
+        # 8) optional eval negatives (not used in batches; just exposed)
+        self.eval_negatives = self._maybe_load_eval_negs(base)  # dict or None
+
+        print(f"[DataProcessor] user_feature_dims: {self.user_feature_dims}")
+        print(f"[DataProcessor] item_feature_dims : {self.item_feature_dims}")
+        print(f"[DataProcessor] text_embedding_dim: {self.emb_dim}")
+        if self.eval_negatives is not None:
+            print("[DataProcessor] loaded eval negatives (valid/test)")
+
+        return train_ds, val_ds, test_ds

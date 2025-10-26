@@ -1,66 +1,108 @@
-# Training Configuration for Two Tower Model
+# # Training Configuration for Two Tower Model
 
-# Model parameters
+# # Model parameters
+# model:
+#   embedding_dim: 128
+#   user_hidden_dims: [256, 128]
+#   item_hidden_dims: [256, 128]
+#   dropout_rate: 0.2
+#   text_feature_dim: 768
+
+# # Training parameters
+# training:
+#   epochs: 100
+#   batch_size: 256
+#   learning_rate: 0.001
+#   weight_decay: 1e-5
+#   optimizer: "adam"  # adam, sgd
+#   scheduler: "cosine"  # step, cosine, none
+#   grad_clip_norm: 1.0
+#   early_stopping_patience: 10
+
+# # Data parameters
+# data:
+#   user_features:
+#     - "user_id"
+#     - "age_group"
+#     - "gender"
+#     - "location"
+#   item_features:
+#     - "item_id"
+#     - "category"
+#     - "brand"
+#     - "price_range"
+#   text_feature_columns:
+#     - "title"
+#     - "description"
+#   target_column: "rating"
+#   max_sequence_length: 50
+
+# # Evaluation parameters
+# evaluation:
+#   k_values: [5, 10, 20, 50]
+#   metrics:
+#     - "mse"
+#     - "rmse"
+#     - "mae"
+#     - "r2"
+#     - "precision"
+#     - "recall"
+#     - "ndcg"
+#     - "hit_rate"
+#     - "coverage"
+
+# # Paths
+# paths:
+#   data_dir: "data"
+#   model_dir: "results/models"
+#   log_dir: "logs"
+#   plot_dir: "results/plots"
+#   metrics_dir: "results/metrics"
+
+# # Logging
+# logging:
+#   level: "INFO"
+#   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+#   file: "logs/training.log"
+
+# --------------------------------
+# Adjusted versions of the above code
+# --------------------------------
+experiment_name: two_tower_default
+
+paths:
+  output_dir: outputs
+  checkpoint_dir: outputs/checkpoints
+
+data:
+  data_path: data/processed
+  text_embedding_path: data/processed/items_text_emb_title_main_category_average_rating_features_price_details_all-mpnet-base-v2.json
+  neg_ratio: 1
+  seed: 42
+  emb_dim: 768
+
 model:
   embedding_dim: 128
-  user_hidden_dims: [256, 128]
-  item_hidden_dims: [256, 128]
-  dropout_rate: 0.2
   text_feature_dim: 768
 
-# Training parameters
+  user_embedding_dims:
+    user_id: 128
+  item_embedding_dims:
+    item_id: 128
+    category: 32
+    brand: 32
+
+  user_mlp_hidden: [256, 128]
+  item_mlp_hidden: [256, 128]
+  dropout: 0.1
+
 training:
-  epochs: 100
-  batch_size: 256
-  learning_rate: 0.001
-  weight_decay: 1e-5
-  optimizer: "adam"  # adam, sgd
-  scheduler: "cosine"  # step, cosine, none
-  grad_clip_norm: 1.0
-  early_stopping_patience: 10
+  batch_size: 1024
+  num_epochs: 5
+  learning_rate: 1.0e-3
+  weight_decay: 1.0e-5
+  device: cuda  
 
-# Data parameters
-data:
-  user_features:
-    - "user_id"
-    - "age_group"
-    - "gender"
-    - "location"
-  item_features:
-    - "item_id"
-    - "category"
-    - "brand"
-    - "price_range"
-  text_feature_columns:
-    - "title"
-    - "description"
-  target_column: "rating"
-  max_sequence_length: 50
-
-# Evaluation parameters
-evaluation:
-  k_values: [5, 10, 20, 50]
-  metrics:
-    - "mse"
-    - "rmse"
-    - "mae"
-    - "r2"
-    - "precision"
-    - "recall"
-    - "ndcg"
-    - "hit_rate"
-    - "coverage"
-
-# Paths
-paths:
-  data_dir: "data"
-  model_dir: "results/models"
-  log_dir: "logs"
-  plot_dir: "results/plots"
-  metrics_dir: "results/metrics"
-
-# Logging
-logging:
-  level: "INFO"
-  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-  file: "logs/training.log"
+eval:
+  topk: [10, 50, 100]
+  use_eval_negatives: true
