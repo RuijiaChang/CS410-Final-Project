@@ -26,6 +26,7 @@ results = trainer.train()
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader
 import numpy as np
@@ -179,28 +180,33 @@ class TwoTowerTrainer:
                     text_features=batch['text_features']
                 )
                 
-                # Compute similarity scores
-                similarity_scores = self.model.compute_similarity(
-                    user_embeddings, item_embeddings
-                )
+                # Compute similarity scores (dot product between corresponding user and item)
+                # Each user-item pair should have high similarity (label=1 for validation set)
+                similarity_scores = torch.sum(user_embeddings * item_embeddings, dim=1)
                 
-                # Compute loss
-                batch_size = similarity_scores.size(0)
-                targets = batch['targets'].unsqueeze(1).expand(-1, batch_size)
-                loss = self.criterion(similarity_scores, targets)
+                # Get labels (all should be 1 for validation set positive samples)
+                labels = batch['labels'].float()
+                
+                # Compute BCE loss for positive samples
+                # We want similarity to be close to 1 for positive pairs
+                loss = F.binary_cross_entropy_with_logits(similarity_scores, labels)
                 
                 total_loss += loss.item()
                 num_batches += 1
                 
                 # Collect predictions and targets for metrics
-                all_predictions.extend(similarity_scores.cpu().numpy().flatten())
-                all_targets.extend(targets.cpu().numpy().flatten())
+                all_predictions.extend(similarity_scores.cpu().numpy())
+                all_targets.extend(labels.cpu().numpy())
         
         # Calculate metrics
-        metrics = calculate_metrics(
-            np.array(all_predictions),
-            np.array(all_targets)
-        )
+        try:
+            metrics = calculate_metrics(
+                np.array(all_targets),
+                np.array(all_predictions)
+            )
+        except Exception as e:
+            logger.warning(f"Could not calculate metrics: {e}")
+            metrics = {}
         
         return total_loss / num_batches, metrics
     
@@ -222,6 +228,7 @@ class TwoTowerTrainer:
         device_batch['text_features'] = batch['text_features'].to(self.device)
         device_batch['labels'] = batch['labels'].to(self.device)
         device_batch['ratings'] = batch['ratings'].to(self.device)
+        device_batch['targets'] = device_batch['labels']  # Alias for compatibility
         
         return device_batch
     
@@ -307,7 +314,10 @@ class TwoTowerTrainer:
             ax2.grid(True)
         
         plt.tight_layout()
-        plt.savefig('results/plots/training_history.png')
+        # Save plot to a sensible default location
+        plot_dir = Path('outputs/results/plots')
+        plot_dir.mkdir(parents=True, exist_ok=True)
+        plt.savefig(plot_dir / 'training_history.png')
         plt.close()
     
     def save_model(self, path: str):

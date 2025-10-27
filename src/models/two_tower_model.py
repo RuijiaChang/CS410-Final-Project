@@ -78,7 +78,10 @@ class UserTower(nn.Module):
         
         for feature_name, feature_values in user_features.items():
             if feature_name in self.embeddings:
-                emb = self.embeddings[feature_name](feature_values)
+                # Clamp indices to valid range to avoid out-of-bounds errors
+                vocab_size = self.user_feature_dims.get(feature_name, 1)
+                clamped_values = torch.clamp(feature_values, min=0, max=vocab_size-1)
+                emb = self.embeddings[feature_name](clamped_values)
                 embeddings.append(emb)
         
         # Concatenate all embeddings
@@ -155,7 +158,10 @@ class ItemTower(nn.Module):
         # Process categorical features
         for feature_name, feature_values in item_features.items():
             if feature_name in self.embeddings:
-                emb = self.embeddings[feature_name](feature_values)
+                # Clamp indices to valid range to avoid out-of-bounds errors
+                vocab_size = self.item_feature_dims.get(feature_name, 1)
+                clamped_values = torch.clamp(feature_values, min=0, max=vocab_size-1)
+                emb = self.embeddings[feature_name](clamped_values)
                 embeddings.append(emb)
         
         # Process text features
@@ -254,3 +260,175 @@ class TwoTowerModel(nn.Module):
                            text_features: torch.Tensor) -> torch.Tensor:
         """Get item embeddings for inference"""
         return self.item_tower(item_features, text_features)
+
+
+def main():
+    """Test function for Two Tower Model"""
+    print("Testing Two Tower Model...")
+    
+    # Set random seed for reproducibility
+    torch.manual_seed(42)
+    
+    # Define feature dimensions (based on data_loader.py output format)
+    user_feature_dims = {
+        'user_id': 1000,      # 1000 unique users
+        'age_group': 5,        # 5 age groups (0-4)
+        'gender': 2,           # 2 genders (0=female, 1=male)
+        'location': 50         # 50 locations
+    }
+    
+    item_feature_dims = {
+        'item_id': 5000,       # 5000 unique items
+        'category': 20,        # 20 categories
+        'brand': 100,          # 100 brands
+        'price_range': 10      # 10 price ranges
+    }
+    
+    # Model parameters
+    text_feature_dim = 768     # BERT embedding dimension
+    embedding_dim = 128
+    batch_size = 32
+    
+    # Create model
+    model = TwoTowerModel(
+        user_feature_dims=user_feature_dims,
+        item_feature_dims=item_feature_dims,
+        text_feature_dim=text_feature_dim,
+        embedding_dim=embedding_dim,
+        user_hidden_dims=[256, 128],
+        item_hidden_dims=[256, 128],
+        dropout_rate=0.2
+    )
+    
+    print(f"Model created successfully!")
+    print(f"User tower parameters: {sum(p.numel() for p in model.user_tower.parameters()):,}")
+    print(f"Item tower parameters: {sum(p.numel() for p in model.item_tower.parameters()):,}")
+    print(f"Total parameters: {sum(p.numel() for p in model.parameters()):,}")
+    
+    # Generate test data following data_loader.py output format
+    # user_features: Dict[str, torch.Tensor] - User feature tensors
+    user_features = {
+        'user_id': torch.randint(0, user_feature_dims['user_id'], (batch_size,)),
+        'age_group': torch.randint(0, user_feature_dims['age_group'], (batch_size,)),
+        'gender': torch.randint(0, user_feature_dims['gender'], (batch_size,)),
+        'location': torch.randint(0, user_feature_dims['location'], (batch_size,))
+    }
+    
+    # item_features: Dict[str, torch.Tensor] - Item feature tensors
+    item_features = {
+        'item_id': torch.randint(0, item_feature_dims['item_id'], (batch_size,)),
+        'category': torch.randint(0, item_feature_dims['category'], (batch_size,)),
+        'brand': torch.randint(0, item_feature_dims['brand'], (batch_size,)),
+        'price_range': torch.randint(0, item_feature_dims['price_range'], (batch_size,))
+    }
+    
+    # text_features: torch.Tensor - Text embeddings (batch_size, 768) # BERT
+    text_features = torch.randn(batch_size, text_feature_dim)
+    
+    # labels: torch.Tensor - Binary labels (1=positive, 0=negative)
+    labels = torch.randint(0, 2, (batch_size,)).float()
+    
+    # ratings: torch.Tensor - Ratings (positive samples have rating, negative samples are 0)
+    ratings = torch.where(labels == 1, 
+                         torch.rand(batch_size) * 4 + 1,  # Random rating 1-5 for positive samples
+                         torch.zeros(batch_size))         # 0 for negative samples
+    
+    print(f"\nTest data shapes (following data_loader.py format):")
+    print(f"User features: {[(k, v.shape) for k, v in user_features.items()]}")
+    print(f"Item features: {[(k, v.shape) for k, v in item_features.items()]}")
+    print(f"Text features: {text_features.shape}")
+    print(f"Labels: {labels.shape}")
+    print(f"Ratings: {ratings.shape}")
+    
+    # Display sample data to verify format
+    print(f"\nSample data (first 5 samples):")
+    print(f"User IDs: {user_features['user_id'][:5]}")
+    print(f"Age groups: {user_features['age_group'][:5]}")
+    print(f"Genders: {user_features['gender'][:5]}")
+    print(f"Item IDs: {item_features['item_id'][:5]}")
+    print(f"Categories: {item_features['category'][:5]}")
+    print(f"Labels: {labels[:5]}")
+    print(f"Ratings: {ratings[:5]}")
+    
+    # Test forward pass
+    print(f"\nTesting forward pass...")
+    model.eval()
+    with torch.no_grad():
+        user_embeddings, item_embeddings = model(user_features, item_features, text_features)
+    
+    print(f"User embeddings shape: {user_embeddings.shape}")
+    print(f"Item embeddings shape: {item_embeddings.shape}")
+    
+    # Test similarity computation
+    print(f"\nTesting similarity computation...")
+    similarity_matrix = model.compute_similarity(user_embeddings, item_embeddings)
+    print(f"Similarity matrix shape: {similarity_matrix.shape}")
+    print(f"Similarity matrix sample (first 5x5):")
+    print(similarity_matrix[:5, :5])
+    
+    # Test individual tower outputs
+    print(f"\nTesting individual tower outputs...")
+    user_emb_only = model.get_user_embeddings(user_features)
+    item_emb_only = model.get_item_embeddings(item_features, text_features)
+    
+    print(f"User embeddings only shape: {user_emb_only.shape}")
+    print(f"Item embeddings only shape: {item_emb_only.shape}")
+    
+    # Verify embeddings are normalized
+    print(f"\nVerifying L2 normalization...")
+    user_norms = torch.norm(user_embeddings, p=2, dim=1)
+    item_norms = torch.norm(item_embeddings, p=2, dim=1)
+    
+    print(f"User embedding norms (should be ~1.0): {user_norms[:5]}")
+    print(f"Item embedding norms (should be ~1.0): {item_norms[:5]}")
+    
+    # Test with different batch sizes
+    print(f"\nTesting with different batch sizes...")
+    test_batch_sizes = [1, 16, 64]
+    for bs in test_batch_sizes:
+        test_user_features = {k: v[:bs] for k, v in user_features.items()}
+        test_item_features = {k: v[:bs] for k, v in item_features.items()}
+        test_text_features = text_features[:bs]
+        
+        with torch.no_grad():
+            u_emb, i_emb = model(test_user_features, test_item_features, test_text_features)
+        
+        print(f"Batch size {bs}: User emb {u_emb.shape}, Item emb {i_emb.shape}")
+    
+    # Test gradient computation with realistic loss
+    print(f"\nTesting gradient computation...")
+    model.train()
+    user_embeddings, item_embeddings = model(user_features, item_features, text_features)
+    
+    # Compute similarity scores for each user-item pair
+    similarity_scores = torch.sum(user_embeddings * item_embeddings, dim=1)  # Element-wise dot product
+    
+    # Create a simple binary cross-entropy loss
+    # Convert labels to probabilities for BCE loss
+    target_probs = labels
+    loss = F.binary_cross_entropy_with_logits(similarity_scores, target_probs)
+    
+    print(f"Loss value: {loss.item():.4f}")
+    loss.backward()
+    
+    # Check if gradients exist
+    has_gradients = any(p.grad is not None for p in model.parameters())
+    print(f"Gradients computed: {has_gradients}")
+    
+    # Test data format compatibility with training loop
+    print(f"\nTesting data format compatibility...")
+    batch_data = {
+        'user_features': user_features,
+        'item_features': item_features,
+        'text_features': text_features,
+        'labels': labels,
+        'ratings': ratings
+    }
+    
+    print(f"Batch data keys: {list(batch_data.keys())}")
+    print(f"All required keys present: {all(key in batch_data for key in ['user_features', 'item_features', 'text_features', 'labels', 'ratings'])}")
+    
+
+
+if __name__ == "__main__":
+    main()

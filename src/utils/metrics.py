@@ -41,12 +41,14 @@ def calculate_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float
 
 def mean_absolute_percentage_error(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """Calculate Mean Absolute Percentage Error"""
-    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+    eps = 1e-8  # Small epsilon to avoid division by zero
+    return np.mean(np.abs((y_true - y_pred) / (np.abs(y_true) + eps))) * 100
 
 
 def symmetric_mean_absolute_percentage_error(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """Calculate Symmetric Mean Absolute Percentage Error"""
-    return np.mean(2 * np.abs(y_true - y_pred) / (np.abs(y_true) + np.abs(y_pred))) * 100
+    eps = 1e-8  # Small epsilon to avoid division by zero
+    return np.mean(2 * np.abs(y_true - y_pred) / (np.abs(y_true) + np.abs(y_pred) + eps)) * 100
 
 
 def calculate_ranking_metrics(y_true: np.ndarray, 

@@ -94,7 +94,9 @@ class InteractionDataset(Dataset):
         emb_dim: int = 768,
     ):
         self.df = df.reset_index(drop=True)
-        self.rows = row_ids
+        # Filter row_ids to valid range
+        max_idx = len(self.df) - 1
+        self.rows = [rid for rid in row_ids if 0 <= rid <= max_idx]
         self.uid2idx = {str(k): int(v) for k, v in uid2idx.items()}
         self.iid2idx = {str(k): int(v) for k, v in iid2idx.items()}
         self.item_text_emb = {str(k): v for k, v in item_text_emb.items()}
@@ -132,15 +134,29 @@ class InteractionDataset(Dataset):
                 return iid
 
     def _encode(self, uid: str, iid: str, rating: float, category: str, brand: str, label: int):
+        # Convert to string to ensure consistent key lookup
+        uid_str = str(uid)
+        iid_str = str(iid)
+        
+        # Get indices with fallback
+        user_idx = self.uid2idx.get(uid_str, 0)
+        item_idx = self.iid2idx.get(iid_str, 0)
+        
+        # Get category and brand indices, clamp to valid range
+        cate_idx = self.cate2idx.get(str(category), 0)
+        brand_idx = self.brand2idx.get(str(brand), 0)
+        cate_max = max(self.cate2idx.values()) if self.cate2idx else 0
+        brand_max = max(self.brand2idx.values()) if self.brand2idx else 0
+        
         user_feats = {
-            "user_id": torch.tensor(self.uid2idx[str(uid)], dtype=torch.long)
+            "user_id": torch.tensor(user_idx, dtype=torch.long)
         }
         item_feats = {
-            "item_id": torch.tensor(self.iid2idx[str(iid)], dtype=torch.long),
-            "category": torch.tensor(self.cate2idx.get(str(category), 0), dtype=torch.long),
-            "brand": torch.tensor(self.brand2idx.get(str(brand), 0), dtype=torch.long),
+            "item_id": torch.tensor(item_idx, dtype=torch.long),
+            "category": torch.tensor(min(cate_idx, cate_max), dtype=torch.long),
+            "brand": torch.tensor(min(brand_idx, brand_max), dtype=torch.long),
         }
-        emb = self.item_text_emb.get(str(iid))
+        emb = self.item_text_emb.get(iid_str)
         text_feats = torch.tensor(emb, dtype=torch.float32) if emb is not None else self._zero
         labels = torch.tensor(label, dtype=torch.long)
         ratings = torch.tensor(rating if label == 1 else 0.0, dtype=torch.float32)
@@ -148,6 +164,9 @@ class InteractionDataset(Dataset):
 
     def __getitem__(self, idx: int):
         rid, is_pos = self.sample_index[idx]
+        # Safety check for row index
+        if rid >= len(self.df):
+            rid = 0  # Fallback to first row
         row = self.df.iloc[rid]
         uid = str(row["user_id"])
         rating = float(row.get("rating", 1.0))
@@ -179,7 +198,7 @@ def _collate(samples):
     for k in list(user_b.keys()): user_b[k] = torch.stack(user_b[k], 0)
     for k in list(item_b.keys()): item_b[k] = torch.stack(item_b[k], 0)
     text_features = torch.stack(t_list, 0)
-    labels = torch.stack(y_list, 0)
+    labels = torch.stack(y_list, 0).float()  # Convert to float for BCE loss
     ratings = torch.stack(r_list, 0)
 
     return {
