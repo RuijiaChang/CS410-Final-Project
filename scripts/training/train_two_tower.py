@@ -131,7 +131,7 @@ def main():
         
         # 5. Prepare training config
         trainer_config = {
-            'epochs': training_config.get('num_epochs', 5),
+            'epochs': training_config.get('num_epochs', 100),
             'learning_rate': training_config.get('learning_rate', 1e-3),
             'weight_decay': training_config.get('weight_decay', 1e-5),
             'optimizer': 'adam',
