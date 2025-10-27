@@ -98,7 +98,7 @@ model:
 
 training:
   batch_size: 1024
-  num_epochs: 5
+  num_epochs: 100
   learning_rate: 1.0e-3
   weight_decay: 1.0e-5
   device: cuda  

@@ -1,0 +1,387 @@
+2025-10-27 02:14:13,075 - __main__ - INFO - Starting Two Tower Model training
+2025-10-27 02:14:13,075 - __main__ - INFO - Configuration: config/training_config.yaml
+2025-10-27 02:14:13,075 - __main__ - INFO - Initializing data processor...
+2025-10-27 02:14:13,075 - __main__ - INFO - Processing data...
+2025-10-27 02:14:57,387 - __main__ - INFO - Train samples: 135830
+2025-10-27 02:14:57,387 - __main__ - INFO - Val samples: 31204
+2025-10-27 02:14:57,387 - __main__ - INFO - Test samples: 92366
+2025-10-27 02:14:57,387 - __main__ - INFO - Creating data loaders...
+2025-10-27 02:14:57,387 - __main__ - INFO - Initializing model...
+2025-10-27 02:14:57,387 - __main__ - INFO - User feature dims: {'user_id': 93543}
+2025-10-27 02:14:57,387 - __main__ - INFO - Item feature dims: {'item_id': 159279, 'category': 1, 'brand': 1}
+2025-10-27 02:14:57,387 - __main__ - INFO - Text feature dim: 768
+2025-10-27 02:14:57,546 - __main__ - INFO - Model initialized with 32,723,072 parameters
+2025-10-27 02:14:57,546 - __main__ - INFO - Initializing trainer...
+2025-10-27 02:15:00,339 - __main__ - INFO - Starting training...
+2025-10-27 02:15:00,340 - src.training.trainer - INFO - Starting training...
+2025-10-27 02:15:00,340 - src.training.trainer - INFO - Epoch 1/5
+2025-10-27 02:15:33,554 - src.training.trainer - INFO - Train Loss: 0.3311, Val Loss: 0.3134
+2025-10-27 02:15:33,557 - src.training.trainer - INFO - Val Metrics: {'mse': 1.7252061468298052e-07, 'rmse': np.float64(0.0004153560095664688), 'mae': 0.00040537596214562654, 'r2': 0.0, 'mape': np.float32(0.040537596), 'smape': np.float32(0.040546224)}
+2025-10-27 02:15:33,558 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3134)
+2025-10-27 02:15:33,558 - src.training.trainer - INFO - Epoch 2/5
+2025-10-27 02:16:20,157 - src.training.trainer - INFO - Train Loss: 0.3142, Val Loss: 0.3133
+2025-10-27 02:16:20,157 - src.training.trainer - INFO - Val Metrics: {'mse': 2.4326570979837925e-08, 'rmse': np.float64(0.00015596977585365034), 'mae': 0.00015206863463390619, 'r2': 0.0, 'mape': np.float32(0.015206863), 'smape': np.float32(0.01520808)}
+2025-10-27 02:16:20,157 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:16:20,157 - src.training.trainer - INFO - Epoch 3/5
+2025-10-27 02:17:08,687 - src.training.trainer - INFO - Train Loss: 0.3137, Val Loss: 0.3133
+2025-10-27 02:17:08,687 - src.training.trainer - INFO - Val Metrics: {'mse': 6.592841383934456e-09, 'rmse': np.float64(8.119631385681529e-05), 'mae': 7.904992526164278e-05, 'r2': 0.0, 'mape': np.float32(0.007904992), 'smape': np.float32(0.007905322)}
+2025-10-27 02:17:08,687 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:17:08,702 - src.training.trainer - INFO - Epoch 4/5
+2025-10-27 02:17:41,891 - src.training.trainer - INFO - Train Loss: 0.3135, Val Loss: 0.3133
+2025-10-27 02:17:41,891 - src.training.trainer - INFO - Val Metrics: {'mse': 2.9314746186059892e-09, 'rmse': np.float64(5.414309391423794e-05), 'mae': 5.237543518887833e-05, 'r2': 0.0, 'mape': np.float32(0.0052375435), 'smape': np.float32(0.0052376906)}
+2025-10-27 02:17:41,891 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:17:41,891 - src.training.trainer - INFO - Epoch 5/5
+2025-10-27 02:18:16,425 - src.training.trainer - INFO - Train Loss: 0.3134, Val Loss: 0.3133
+2025-10-27 02:18:16,425 - src.training.trainer - INFO - Val Metrics: {'mse': 1.5775993844613367e-09, 'rmse': np.float64(3.9719005330714626e-05), 'mae': 3.7785179301863536e-05, 'r2': 0.0, 'mape': np.float32(0.003778518), 'smape': np.float32(0.0037785969)}
+2025-10-27 02:18:16,425 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:18:16,425 - src.training.trainer - INFO - Loaded best model
+2025-10-27 02:18:17,800 - src.training.trainer - INFO - Model saved to outputs\results\best_model.pth
+2025-10-27 02:18:17,800 - __main__ - INFO - Model saved to outputs\results\best_model.pth
+2025-10-27 02:18:17,800 - __main__ - INFO - Evaluating on test set...
+2025-10-27 02:18:27,256 - __main__ - INFO - Test results: {'mse': 1.5824844767919899e-09, 'rmse': np.float64(3.978045345131186e-05), 'mae': 3.786028901231475e-05, 'r2': 0.0, 'mape': np.float32(0.0037860288), 'smape': np.float32(0.0037861078)}
+2025-10-27 02:18:27,256 - __main__ - INFO - Training completed successfully!
+2025-10-27 02:18:27,256 - __main__ - INFO - Results saved to: outputs\results\training_results.yaml
+2025-10-27 02:18:27,256 - __main__ - INFO - Model saved to: outputs\results\best_model.pth
+2025-10-27 02:22:14,952 - __main__ - INFO - Starting Two Tower Model training
+2025-10-27 02:22:14,967 - __main__ - INFO - Configuration: config/training_config.yaml
+2025-10-27 02:22:14,967 - __main__ - INFO - Initializing data processor...
+2025-10-27 02:22:14,967 - __main__ - INFO - Processing data...
+2025-10-27 02:23:07,777 - __main__ - INFO - Train samples: 135830
+2025-10-27 02:23:07,778 - __main__ - INFO - Val samples: 31204
+2025-10-27 02:23:07,778 - __main__ - INFO - Test samples: 92366
+2025-10-27 02:23:07,778 - __main__ - INFO - Creating data loaders...
+2025-10-27 02:23:07,779 - __main__ - INFO - Initializing model...
+2025-10-27 02:23:07,780 - __main__ - INFO - User feature dims: {'user_id': 93543}
+2025-10-27 02:23:07,780 - __main__ - INFO - Item feature dims: {'item_id': 159279, 'category': 1, 'brand': 1}
+2025-10-27 02:23:07,780 - __main__ - INFO - Text feature dim: 768
+2025-10-27 02:23:08,040 - __main__ - INFO - Model initialized with 32,723,072 parameters
+2025-10-27 02:23:08,040 - __main__ - INFO - Initializing trainer...
+2025-10-27 02:23:11,379 - __main__ - INFO - Starting training...
+2025-10-27 02:23:11,379 - src.training.trainer - INFO - Starting training...
+2025-10-27 02:23:11,379 - src.training.trainer - INFO - Epoch 1/100
+2025-10-27 02:23:51,849 - src.training.trainer - INFO - Train Loss: 0.3296, Val Loss: 0.3134
+2025-10-27 02:23:51,849 - src.training.trainer - INFO - Val Metrics: {'mse': 1.591796632283149e-07, 'rmse': np.float64(0.000398973261294933), 'mae': 0.000389779859688133, 'r2': 0.0, 'mape': np.float32(0.038977984), 'smape': np.float32(0.038985953)}
+2025-10-27 02:23:51,849 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3134)
+2025-10-27 02:23:51,849 - src.training.trainer - INFO - Epoch 2/100
+2025-10-27 02:24:24,846 - src.training.trainer - INFO - Train Loss: 0.3139, Val Loss: 0.3133
+2025-10-27 02:24:24,847 - src.training.trainer - INFO - Val Metrics: {'mse': 1.2954916250862425e-08, 'rmse': np.float64(0.00011381966548388035), 'mae': 0.00011093878129031509, 'r2': 0.0, 'mape': np.float32(0.011093878), 'smape': np.float32(0.011094525)}
+2025-10-27 02:24:24,847 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:24:24,847 - src.training.trainer - INFO - Epoch 3/100
+2025-10-27 02:25:05,804 - src.training.trainer - INFO - Train Loss: 0.3135, Val Loss: 0.3133
+2025-10-27 02:25:05,806 - src.training.trainer - INFO - Val Metrics: {'mse': 3.977928653142726e-09, 'rmse': np.float64(6.307082251836206e-05), 'mae': 6.14561649854295e-05, 'r2': 0.0, 'mape': np.float32(0.0061456165), 'smape': np.float32(0.0061458154)}
+2025-10-27 02:25:05,806 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:25:05,806 - src.training.trainer - INFO - Epoch 4/100
+2025-10-27 02:25:39,175 - src.training.trainer - INFO - Train Loss: 0.3134, Val Loss: 0.3133
+2025-10-27 02:25:39,175 - src.training.trainer - INFO - Val Metrics: {'mse': 1.6038446126742656e-09, 'rmse': np.float64(4.004802882382934e-05), 'mae': 3.875841503031552e-05, 'r2': 0.0, 'mape': np.float32(0.0038758414), 'smape': np.float32(0.003875922)}
+2025-10-27 02:25:39,175 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:25:39,175 - src.training.trainer - INFO - Epoch 5/100
+2025-10-27 02:26:12,537 - src.training.trainer - INFO - Train Loss: 0.3134, Val Loss: 0.3133
+2025-10-27 02:26:12,537 - src.training.trainer - INFO - Val Metrics: {'mse': 9.2235480364522e-10, 'rmse': np.float64(3.037029475729895e-05), 'mae': 2.9026616175542586e-05, 'r2': 0.0, 'mape': np.float32(0.0029026617), 'smape': np.float32(0.0029027076)}
+2025-10-27 02:26:12,537 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:26:12,537 - src.training.trainer - INFO - Epoch 6/100
+2025-10-27 02:26:44,857 - src.training.trainer - INFO - Train Loss: 0.3134, Val Loss: 0.3133
+2025-10-27 02:26:44,857 - src.training.trainer - INFO - Val Metrics: {'mse': 6.856185619241728e-10, 'rmse': np.float64(2.6184319008218884e-05), 'mae': 2.434617272228934e-05, 'r2': 0.0, 'mape': np.float32(0.0024346174), 'smape': np.float32(0.0024346514)}
+2025-10-27 02:26:44,857 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:26:44,857 - src.training.trainer - INFO - Epoch 7/100
+2025-10-27 02:27:18,109 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:27:18,109 - src.training.trainer - INFO - Val Metrics: {'mse': 4.42548719892244e-10, 'rmse': np.float64(2.1036841965757216e-05), 'mae': 1.890460407594219e-05, 'r2': 0.0, 'mape': np.float32(0.0018904604), 'smape': np.float32(0.0018904824)}
+2025-10-27 02:27:18,109 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:27:18,109 - src.training.trainer - INFO - Epoch 8/100
+2025-10-27 02:27:50,743 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:27:50,743 - src.training.trainer - INFO - Val Metrics: {'mse': 3.471224141460283e-10, 'rmse': np.float64(1.86312214882983e-05), 'mae': 1.597022492205724e-05, 'r2': 0.0, 'mape': np.float32(0.0015970225), 'smape': np.float32(0.0015970398)}
+2025-10-27 02:27:50,743 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:27:50,743 - src.training.trainer - INFO - Epoch 9/100
+2025-10-27 02:28:23,221 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:28:23,221 - src.training.trainer - INFO - Val Metrics: {'mse': 1.1313294745463054e-10, 'rmse': np.float64(1.0636397296765034e-05), 'mae': 9.209200470650103e-06, 'r2': 0.0, 'mape': np.float32(0.00092092005), 'smape': np.float32(0.0009209257)}
+2025-10-27 02:28:23,221 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:28:23,221 - src.training.trainer - INFO - Epoch 10/100
+2025-10-27 02:28:56,958 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:28:56,958 - src.training.trainer - INFO - Val Metrics: {'mse': 5.946863834704885e-11, 'rmse': np.float64(7.711591168303002e-06), 'mae': 6.9497900767601095e-06, 'r2': 0.0, 'mape': np.float32(0.000694979), 'smape': np.float32(0.00069498195)}
+2025-10-27 02:28:56,958 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:28:56,958 - src.training.trainer - INFO - Epoch 11/100
+2025-10-27 02:29:32,318 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:29:32,320 - src.training.trainer - INFO - Val Metrics: {'mse': 1.2985171965462783e-11, 'rmse': np.float64(3.6034944103554236e-06), 'mae': 3.3206763419002527e-06, 'r2': 0.0, 'mape': np.float32(0.00033206763), 'smape': np.float32(0.0003320683)}
+2025-10-27 02:29:32,320 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:29:32,320 - src.training.trainer - INFO - Epoch 12/100
+2025-10-27 02:30:10,155 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:30:10,155 - src.training.trainer - INFO - Val Metrics: {'mse': 8.579817412091018e-12, 'rmse': np.float64(2.929132535767376e-06), 'mae': 2.6499978957872372e-06, 'r2': 0.0, 'mape': np.float32(0.00026499978), 'smape': np.float32(0.0002650002)}
+2025-10-27 02:30:10,155 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:30:10,155 - src.training.trainer - INFO - Epoch 13/100
+2025-10-27 02:30:50,634 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:30:50,634 - src.training.trainer - INFO - Val Metrics: {'mse': 1.0822776702612558e-11, 'rmse': np.float64(3.289798884827545e-06), 'mae': 3.2624107006995473e-06, 'r2': 0.0, 'mape': np.float32(0.00032624108), 'smape': np.float32(0.0003262416)}
+2025-10-27 02:30:50,634 - src.training.trainer - INFO - Epoch 14/100
+2025-10-27 02:31:31,559 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:31:31,559 - src.training.trainer - INFO - Val Metrics: {'mse': 3.422667314498251e-12, 'rmse': np.float64(1.850045219582011e-06), 'mae': 1.8334845890422002e-06, 'r2': 0.0, 'mape': np.float32(0.00018334846), 'smape': np.float32(0.00018334865)}
+2025-10-27 02:31:31,560 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:31:31,560 - src.training.trainer - INFO - Epoch 15/100
+2025-10-27 02:32:12,880 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:32:12,880 - src.training.trainer - INFO - Val Metrics: {'mse': 2.39847768382373e-12, 'rmse': np.float64(1.548701935113316e-06), 'mae': 1.5442958556377562e-06, 'r2': 0.0, 'mape': np.float32(0.00015442958), 'smape': np.float32(0.00015442973)}
+2025-10-27 02:32:12,880 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:32:12,880 - src.training.trainer - INFO - Epoch 16/100
+2025-10-27 02:32:55,189 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:32:55,190 - src.training.trainer - INFO - Val Metrics: {'mse': 4.137547075788728e-12, 'rmse': np.float64(2.034096132386257e-06), 'mae': 2.0326169760664925e-06, 'r2': 0.0, 'mape': np.float32(0.0002032617), 'smape': np.float32(0.00020326188)}
+2025-10-27 02:32:55,190 - src.training.trainer - INFO - Epoch 17/100
+2025-10-27 02:33:37,638 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:33:37,639 - src.training.trainer - INFO - Val Metrics: {'mse': 6.407398483315729e-13, 'rmse': np.float64(8.004622716478103e-07), 'mae': 7.980554528330686e-07, 'r2': 0.0, 'mape': np.float32(7.980555e-05), 'smape': np.float32(7.980557e-05)}
+2025-10-27 02:33:37,639 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:33:37,639 - src.training.trainer - INFO - Epoch 18/100
+2025-10-27 02:34:22,054 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:34:22,054 - src.training.trainer - INFO - Val Metrics: {'mse': 2.7137068091785677e-13, 'rmse': np.float64(5.209325109050661e-07), 'mae': 5.17034550284734e-07, 'r2': 0.0, 'mape': np.float32(5.1703457e-05), 'smape': np.float32(5.170347e-05)}
+2025-10-27 02:34:22,056 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:34:22,056 - src.training.trainer - INFO - Epoch 19/100
+2025-10-27 02:35:06,152 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:35:06,152 - src.training.trainer - INFO - Val Metrics: {'mse': 1.3793985485094362e-12, 'rmse': np.float64(1.1744779897935236e-06), 'mae': 1.1730905953299953e-06, 'r2': 0.0, 'mape': np.float32(0.00011730906), 'smape': np.float32(0.00011730914)}
+2025-10-27 02:35:06,152 - src.training.trainer - INFO - Epoch 20/100
+2025-10-27 02:35:50,579 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:35:50,579 - src.training.trainer - INFO - Val Metrics: {'mse': 5.851273241971877e-13, 'rmse': np.float64(7.649361569419945e-07), 'mae': 7.62715558266791e-07, 'r2': 0.0, 'mape': np.float32(7.627156e-05), 'smape': np.float32(7.6271586e-05)}
+2025-10-27 02:35:50,580 - src.training.trainer - INFO - Epoch 21/100
+2025-10-27 02:36:35,561 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:36:35,561 - src.training.trainer - INFO - Val Metrics: {'mse': 1.2973377797390051e-12, 'rmse': np.float64(1.1390073659722333e-06), 'mae': 1.137473759627028e-06, 'r2': 0.0, 'mape': np.float32(0.000113747374), 'smape': np.float32(0.00011374745)}
+2025-10-27 02:36:35,562 - src.training.trainer - INFO - Epoch 22/100
+2025-10-27 02:37:20,623 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:37:20,623 - src.training.trainer - INFO - Val Metrics: {'mse': 3.669035561482126e-12, 'rmse': np.float64(1.9154726731233013e-06), 'mae': 1.9143685676681343e-06, 'r2': 0.0, 'mape': np.float32(0.00019143686), 'smape': np.float32(0.00019143704)}
+2025-10-27 02:37:20,624 - src.training.trainer - INFO - Epoch 23/100
+2025-10-27 02:38:06,139 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:38:06,140 - src.training.trainer - INFO - Val Metrics: {'mse': 4.479872202367563e-12, 'rmse': np.float64(2.1165708592833745e-06), 'mae': 2.1157336504984414e-06, 'r2': 0.0, 'mape': np.float32(0.00021157337), 'smape': np.float32(0.00021157357)}
+2025-10-27 02:38:06,140 - src.training.trainer - INFO - Epoch 24/100
+2025-10-27 02:38:52,318 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:38:52,319 - src.training.trainer - INFO - Val Metrics: {'mse': 5.351371255846171e-12, 'rmse': np.float64(2.313303105052637e-06), 'mae': 2.3124937342799967e-06, 'r2': 0.0, 'mape': np.float32(0.00023124937), 'smape': np.float32(0.00023124965)}
+2025-10-27 02:38:52,319 - src.training.trainer - INFO - Epoch 25/100
+2025-10-27 02:39:38,821 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:39:38,821 - src.training.trainer - INFO - Val Metrics: {'mse': 4.788603358513253e-15, 'rmse': np.float64(6.919973524886677e-08), 'mae': 6.091692483778388e-08, 'r2': 0.0, 'mape': np.float32(6.0916923e-06), 'smape': np.float32(6.0916923e-06)}
+2025-10-27 02:39:38,822 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:39:38,822 - src.training.trainer - INFO - Epoch 26/100
+2025-10-27 02:40:25,433 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:40:25,433 - src.training.trainer - INFO - Val Metrics: {'mse': 2.0286227125215772e-12, 'rmse': np.float64(1.424297269716395e-06), 'mae': 1.4230064380171825e-06, 'r2': 0.0, 'mape': np.float32(0.00014230065), 'smape': np.float32(0.00014230076)}
+2025-10-27 02:40:25,433 - src.training.trainer - INFO - Epoch 27/100
+2025-10-27 02:41:12,962 - src.training.trainer - INFO - Train Loss: 0.3134, Val Loss: 0.3141
+2025-10-27 02:41:12,962 - src.training.trainer - INFO - Val Metrics: {'mse': 9.295625204686075e-06, 'rmse': np.float64(0.003048872776074147), 'mae': 0.0030477922409772873, 'r2': 0.0, 'mape': np.float32(0.30477923), 'smape': np.float32(0.3052447)}
+2025-10-27 02:41:12,962 - src.training.trainer - INFO - Epoch 28/100
+2025-10-27 02:41:59,618 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:41:59,618 - src.training.trainer - INFO - Val Metrics: {'mse': 2.2835782947211967e-14, 'rmse': np.float64(1.5111513143035003e-07), 'mae': 1.3416202193639037e-07, 'r2': 0.0, 'mape': np.float32(1.3416202e-05), 'smape': np.float32(1.3416202e-05)}
+2025-10-27 02:41:59,619 - src.training.trainer - INFO - Epoch 29/100
+2025-10-27 02:42:47,489 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:42:47,489 - src.training.trainer - INFO - Val Metrics: {'mse': 2.723864834857856e-14, 'rmse': np.float64(1.6504135344991133e-07), 'mae': 1.5255878338393813e-07, 'r2': 0.0, 'mape': np.float32(1.5255879e-05), 'smape': np.float32(1.5255879e-05)}
+2025-10-27 02:42:47,489 - src.training.trainer - INFO - Epoch 30/100
+2025-10-27 02:43:35,829 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:43:35,830 - src.training.trainer - INFO - Val Metrics: {'mse': 4.1429156654761157e-13, 'rmse': np.float64(6.436548504809169e-07), 'mae': 6.401807013389771e-07, 'r2': 0.0, 'mape': np.float32(6.401807e-05), 'smape': np.float32(6.401808e-05)}
+2025-10-27 02:43:35,830 - src.training.trainer - INFO - Epoch 31/100
+2025-10-27 02:44:23,751 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:44:23,751 - src.training.trainer - INFO - Val Metrics: {'mse': 2.0530572616864022e-14, 'rmse': np.float64(1.4328493506598668e-07), 'mae': 1.2242790603522735e-07, 'r2': 0.0, 'mape': np.float32(1.2242791e-05), 'smape': np.float32(1.2242792e-05)}
+2025-10-27 02:44:23,752 - src.training.trainer - INFO - Epoch 32/100
+2025-10-27 02:45:12,547 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:45:12,548 - src.training.trainer - INFO - Val Metrics: {'mse': 2.2678067757020415e-11, 'rmse': np.float64(4.762149489150925e-06), 'mae': 4.7619287215638906e-06, 'r2': 0.0, 'mape': np.float32(0.00047619286), 'smape': np.float32(0.00047619402)}
+2025-10-27 02:45:12,548 - src.training.trainer - INFO - Epoch 33/100
+2025-10-27 02:46:02,185 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:46:02,185 - src.training.trainer - INFO - Val Metrics: {'mse': 8.252282863129012e-15, 'rmse': np.float64(9.084207650163558e-08), 'mae': 5.6676370263630815e-08, 'r2': 0.0, 'mape': np.float32(5.667637e-06), 'smape': np.float32(5.6676377e-06)}
+2025-10-27 02:46:02,185 - src.training.trainer - INFO - Epoch 34/100
+2025-10-27 02:46:51,987 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:46:51,988 - src.training.trainer - INFO - Val Metrics: {'mse': 1.1444647550343853e-14, 'rmse': np.float64(1.069796595168626e-07), 'mae': 1.0043241616131127e-07, 'r2': 0.0, 'mape': np.float32(1.0043242e-05), 'smape': np.float32(1.0043242e-05)}
+2025-10-27 02:46:51,988 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 02:46:51,988 - src.training.trainer - INFO - Epoch 35/100
+2025-10-27 02:47:42,232 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:47:42,232 - src.training.trainer - INFO - Val Metrics: {'mse': 1.652895931236742e-09, 'rmse': np.float64(4.065582284540238e-05), 'mae': 4.0654686017660424e-05, 'r2': 0.0, 'mape': np.float32(0.0040654684), 'smape': np.float32(0.004065551)}
+2025-10-27 02:47:42,232 - src.training.trainer - INFO - Epoch 36/100
+2025-10-27 02:48:33,070 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:48:33,070 - src.training.trainer - INFO - Val Metrics: {'mse': 1.0748313622867354e-14, 'rmse': np.float64(1.0367407401499834e-07), 'mae': 9.383089860648397e-08, 'r2': 0.0, 'mape': np.float32(9.3830895e-06), 'smape': np.float32(9.3830895e-06)}
+2025-10-27 02:48:33,070 - src.training.trainer - INFO - Epoch 37/100
+2025-10-27 02:49:22,852 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:49:22,852 - src.training.trainer - INFO - Val Metrics: {'mse': 5.758529351469364e-15, 'rmse': np.float64(7.588497447762214e-08), 'mae': 4.21304982012316e-08, 'r2': 0.0, 'mape': np.float32(4.21305e-06), 'smape': np.float32(4.2130505e-06)}
+2025-10-27 02:49:22,852 - src.training.trainer - INFO - Epoch 38/100
+2025-10-27 02:50:15,998 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:50:15,998 - src.training.trainer - INFO - Val Metrics: {'mse': 6.567875177098184e-14, 'rmse': np.float64(2.5627866038939304e-07), 'mae': 2.536616534598579e-07, 'r2': 0.0, 'mape': np.float32(2.5366166e-05), 'smape': np.float32(2.5366167e-05)}
+2025-10-27 02:50:15,998 - src.training.trainer - INFO - Epoch 39/100
+2025-10-27 02:51:08,141 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:51:08,141 - src.training.trainer - INFO - Val Metrics: {'mse': 7.68556090080183e-14, 'rmse': np.float64(2.772284419175246e-07), 'mae': 2.708874831114372e-07, 'r2': 0.0, 'mape': np.float32(2.7088749e-05), 'smape': np.float32(2.708875e-05)}
+2025-10-27 02:51:08,141 - src.training.trainer - INFO - Epoch 40/100
+2025-10-27 02:52:02,291 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:52:02,291 - src.training.trainer - INFO - Val Metrics: {'mse': 4.633494976591379e-12, 'rmse': np.float64(2.1525554526170467e-06), 'mae': 2.1523744635487674e-06, 'r2': 0.0, 'mape': np.float32(0.00021523745), 'smape': np.float32(0.00021523763)}
+2025-10-27 02:52:02,291 - src.training.trainer - INFO - Epoch 41/100
+2025-10-27 02:52:58,620 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:52:58,621 - src.training.trainer - INFO - Val Metrics: {'mse': 1.3803711388445279e-14, 'rmse': np.float64(1.1748919690101418e-07), 'mae': 1.1579392378280318e-07, 'r2': 0.0, 'mape': np.float32(1.1579393e-05), 'smape': np.float32(1.1579394e-05)}
+2025-10-27 02:52:58,621 - src.training.trainer - INFO - Epoch 42/100
+2025-10-27 02:53:55,625 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:53:55,625 - src.training.trainer - INFO - Val Metrics: {'mse': 5.253152310391064e-14, 'rmse': np.float64(2.2919756347725567e-07), 'mae': 2.2636164942468895e-07, 'r2': 0.0, 'mape': np.float32(2.2636164e-05), 'smape': np.float32(2.2636168e-05)}
+2025-10-27 02:53:55,625 - src.training.trainer - INFO - Epoch 43/100
+2025-10-27 02:54:55,226 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:54:55,226 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 02:54:55,226 - src.training.trainer - INFO - Epoch 44/100
+2025-10-27 02:55:56,470 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:55:56,470 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 02:55:56,472 - src.training.trainer - INFO - Epoch 45/100
+2025-10-27 02:56:56,729 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:56:56,730 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 02:56:56,730 - src.training.trainer - INFO - Epoch 46/100
+2025-10-27 02:57:57,678 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:57:57,678 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 02:57:57,678 - src.training.trainer - INFO - Epoch 47/100
+2025-10-27 02:59:00,664 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 02:59:00,664 - src.training.trainer - INFO - Val Metrics: {'mse': 3.552713678800501e-15, 'rmse': np.float64(5.960464477539063e-08), 'mae': 5.960464477539063e-08, 'r2': 0.0, 'mape': np.float32(5.9604645e-06), 'smape': np.float32(5.9604645e-06)}
+2025-10-27 02:59:00,664 - src.training.trainer - INFO - Epoch 48/100
+2025-10-27 03:00:05,108 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:00:05,108 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 03:00:05,108 - src.training.trainer - INFO - Epoch 49/100
+2025-10-27 03:01:11,219 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:01:11,219 - src.training.trainer - INFO - Val Metrics: {'mse': 5.684341886080802e-14, 'rmse': np.float64(2.384185791015625e-07), 'mae': 2.384185791015625e-07, 'r2': 0.0, 'mape': np.float32(2.3841858e-05), 'smape': np.float32(2.3841862e-05)}
+2025-10-27 03:01:11,219 - src.training.trainer - INFO - Epoch 50/100
+2025-10-27 03:02:16,055 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:02:16,055 - src.training.trainer - INFO - Val Metrics: {'mse': 2.63363515837136e-14, 'rmse': np.float64(1.6228478543509122e-07), 'mae': 1.5311464096612326e-07, 'r2': 0.0, 'mape': np.float32(1.5311463e-05), 'smape': np.float32(1.5311465e-05)}
+2025-10-27 03:02:16,055 - src.training.trainer - INFO - Epoch 51/100
+2025-10-27 03:03:22,744 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:03:22,744 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 03:03:22,744 - src.training.trainer - INFO - Epoch 52/100
+2025-10-27 03:04:29,655 - src.training.trainer - INFO - Train Loss: 0.3134, Val Loss: 0.3133
+2025-10-27 03:04:29,655 - src.training.trainer - INFO - Val Metrics: {'mse': 8.644625136165415e-15, 'rmse': np.float64(9.29764762516058e-08), 'mae': 8.262398409897287e-08, 'r2': 0.0, 'mape': np.float32(8.262398e-06), 'smape': np.float32(8.262398e-06)}
+2025-10-27 03:04:29,655 - src.training.trainer - INFO - Epoch 53/100
+2025-10-27 03:05:35,692 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:05:35,692 - src.training.trainer - INFO - Val Metrics: {'mse': 1.1272603944040283e-12, 'rmse': np.float64(1.0617251972163176e-06), 'mae': 1.0611552170303185e-06, 'r2': 0.0, 'mape': np.float32(0.00010611552), 'smape': np.float32(0.00010611559)}
+2025-10-27 03:05:35,692 - src.training.trainer - INFO - Epoch 54/100
+2025-10-27 03:06:43,016 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:06:43,016 - src.training.trainer - INFO - Val Metrics: {'mse': 9.511282820368061e-13, 'rmse': np.float64(9.752580592011564e-07), 'mae': 9.741550002217991e-07, 'r2': 0.0, 'mape': np.float32(9.74155e-05), 'smape': np.float32(9.7415534e-05)}
+2025-10-27 03:06:43,016 - src.training.trainer - INFO - Epoch 55/100
+2025-10-27 03:07:51,176 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:07:51,176 - src.training.trainer - INFO - Val Metrics: {'mse': 2.9898172984279452e-15, 'rmse': np.float64(5.4679221816225086e-08), 'mae': 4.67301646267515e-08, 'r2': 0.0, 'mape': np.float32(4.6730165e-06), 'smape': np.float32(4.6730165e-06)}
+2025-10-27 03:07:51,176 - src.training.trainer - INFO - Epoch 56/100
+2025-10-27 03:08:59,890 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:08:59,890 - src.training.trainer - INFO - Val Metrics: {'mse': 1.0179963832622138e-13, 'rmse': np.float64(3.1906055589217133e-07), 'mae': 3.123131477877905e-07, 'r2': 0.0, 'mape': np.float32(3.1231313e-05), 'smape': np.float32(3.123132e-05)}
+2025-10-27 03:08:59,890 - src.training.trainer - INFO - Epoch 57/100
+2025-10-27 03:10:08,292 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:10:08,292 - src.training.trainer - INFO - Val Metrics: {'mse': 4.325557551303639e-15, 'rmse': np.float64(6.576897103728808e-08), 'mae': 3.6285406679326115e-08, 'r2': 0.0, 'mape': np.float32(3.6285408e-06), 'smape': np.float32(3.6285414e-06)}
+2025-10-27 03:10:08,292 - src.training.trainer - INFO - Epoch 58/100
+2025-10-27 03:11:18,491 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:11:18,491 - src.training.trainer - INFO - Val Metrics: {'mse': 3.828582992358807e-15, 'rmse': np.float64(6.187554438030268e-08), 'mae': 6.033241817249291e-08, 'r2': 0.0, 'mape': np.float32(6.033242e-06), 'smape': np.float32(6.033242e-06)}
+2025-10-27 03:11:18,491 - src.training.trainer - INFO - Epoch 59/100
+2025-10-27 03:12:30,014 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:12:30,014 - src.training.trainer - INFO - Val Metrics: {'mse': 4.044906313241609e-15, 'rmse': np.float64(6.35995779328889e-08), 'mae': 6.169244670672924e-08, 'r2': 0.0, 'mape': np.float32(6.1692444e-06), 'smape': np.float32(6.1692444e-06)}
+2025-10-27 03:12:30,014 - src.training.trainer - INFO - Epoch 60/100
+2025-10-27 03:13:40,942 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:13:40,942 - src.training.trainer - INFO - Val Metrics: {'mse': 3.552713678800501e-15, 'rmse': np.float64(5.960464477539063e-08), 'mae': 5.960464477539063e-08, 'r2': 0.0, 'mape': np.float32(5.9604645e-06), 'smape': np.float32(5.9604645e-06)}
+2025-10-27 03:13:40,942 - src.training.trainer - INFO - Epoch 61/100
+2025-10-27 03:14:52,771 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:14:52,771 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 03:14:52,771 - src.training.trainer - INFO - Epoch 62/100
+2025-10-27 03:16:05,858 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:16:05,858 - src.training.trainer - INFO - Val Metrics: {'mse': 1.3816462622433245e-14, 'rmse': np.float64(1.1754344993419772e-07), 'mae': 1.159008888862445e-07, 'r2': 0.0, 'mape': np.float32(1.1590089e-05), 'smape': np.float32(1.1590089e-05)}
+2025-10-27 03:16:05,858 - src.training.trainer - INFO - New best model saved (Val Loss: 0.3133)
+2025-10-27 03:16:05,858 - src.training.trainer - INFO - Epoch 63/100
+2025-10-27 03:17:18,708 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:17:18,708 - src.training.trainer - INFO - Val Metrics: {'mse': 1.4210854715202004e-14, 'rmse': np.float64(1.1920928955078125e-07), 'mae': 1.1920928955078125e-07, 'r2': 0.0, 'mape': np.float32(1.1920929e-05), 'smape': np.float32(1.1920931e-05)}
+2025-10-27 03:17:18,723 - src.training.trainer - INFO - Epoch 64/100
+2025-10-27 03:18:31,548 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:18:31,548 - src.training.trainer - INFO - Val Metrics: {'mse': 3.552713678800501e-15, 'rmse': np.float64(5.960464477539063e-08), 'mae': 5.960464477539063e-08, 'r2': 0.0, 'mape': np.float32(5.9604645e-06), 'smape': np.float32(5.9604645e-06)}
+2025-10-27 03:18:31,548 - src.training.trainer - INFO - Epoch 65/100
+2025-10-27 03:19:46,900 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:19:46,900 - src.training.trainer - INFO - Val Metrics: {'mse': 5.383378631762525e-09, 'rmse': np.float64(7.337151103638609e-05), 'mae': 7.337151328101754e-05, 'r2': 0.0, 'mape': np.float32(0.007337151), 'smape': np.float32(0.00733742)}
+2025-10-27 03:19:46,900 - src.training.trainer - INFO - Epoch 66/100
+2025-10-27 03:21:01,066 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:21:01,066 - src.training.trainer - INFO - Val Metrics: {'mse': 1.3816462622433245e-14, 'rmse': np.float64(1.1754344993419772e-07), 'mae': 1.159008888862445e-07, 'r2': 0.0, 'mape': np.float32(1.1590089e-05), 'smape': np.float32(1.1590091e-05)}
+2025-10-27 03:21:01,066 - src.training.trainer - INFO - Epoch 67/100
+2025-10-27 03:22:13,949 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:22:13,949 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 03:22:13,949 - src.training.trainer - INFO - Epoch 68/100
+2025-10-27 03:23:31,068 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:23:31,068 - src.training.trainer - INFO - Val Metrics: {'mse': 5.4744969272884844e-14, 'rmse': np.float64(2.339764288830925e-07), 'mae': 2.3338913024417707e-07, 'r2': 0.0, 'mape': np.float32(2.3338913e-05), 'smape': np.float32(2.3338916e-05)}
+2025-10-27 03:23:31,068 - src.training.trainer - INFO - Epoch 69/100
+2025-10-27 03:24:48,204 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:24:48,204 - src.training.trainer - INFO - Val Metrics: {'mse': 1.749402895765903e-13, 'rmse': np.float64(4.1825863957196427e-07), 'mae': 4.1819140506049735e-07, 'r2': 0.0, 'mape': np.float32(4.181914e-05), 'smape': np.float32(4.1819145e-05)}
+2025-10-27 03:24:48,204 - src.training.trainer - INFO - Epoch 70/100
+2025-10-27 03:26:03,366 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:26:03,381 - src.training.trainer - INFO - Val Metrics: {'mse': 1.3896300776750081e-09, 'rmse': np.float64(3.727774238972913e-05), 'mae': 3.727765579242259e-05, 'r2': 0.0, 'mape': np.float32(0.0037277655), 'smape': np.float32(0.0037278354)}
+2025-10-27 03:26:03,381 - src.training.trainer - INFO - Epoch 71/100
+2025-10-27 03:27:21,429 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:27:21,429 - src.training.trainer - INFO - Val Metrics: {'mse': 1.3816462622433245e-14, 'rmse': np.float64(1.1754344993419772e-07), 'mae': 1.159008888862445e-07, 'r2': 0.0, 'mape': np.float32(1.1590089e-05), 'smape': np.float32(1.1590091e-05)}
+2025-10-27 03:27:21,429 - src.training.trainer - INFO - Epoch 72/100
+2025-10-27 03:28:41,734 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:28:41,734 - src.training.trainer - INFO - Val Metrics: {'mse': 3.552713678800501e-15, 'rmse': np.float64(5.960464477539063e-08), 'mae': 5.960464477539063e-08, 'r2': 0.0, 'mape': np.float32(5.9604645e-06), 'smape': np.float32(5.9604645e-06)}
+2025-10-27 03:28:41,734 - src.training.trainer - INFO - Epoch 73/100
+2025-10-27 03:30:02,130 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:30:02,130 - src.training.trainer - INFO - Val Metrics: {'mse': 1.4210854715202004e-14, 'rmse': np.float64(1.1920928955078125e-07), 'mae': 1.1920928955078125e-07, 'r2': 0.0, 'mape': np.float32(1.1920929e-05), 'smape': np.float32(1.1920931e-05)}
+2025-10-27 03:30:02,130 - src.training.trainer - INFO - Epoch 74/100
+2025-10-27 03:31:25,172 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:31:25,172 - src.training.trainer - INFO - Val Metrics: {'mse': 4.604316927725449e-12, 'rmse': np.float64(2.1457672119140625e-06), 'mae': 2.1457672119140625e-06, 'r2': 0.0, 'mape': np.float32(0.00021457672), 'smape': np.float32(0.0002145769)}
+2025-10-27 03:31:25,172 - src.training.trainer - INFO - Epoch 75/100
+2025-10-27 03:32:49,523 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:32:49,523 - src.training.trainer - INFO - Val Metrics: {'mse': 1.176087005561044e-10, 'rmse': np.float64(1.0844754518019502e-05), 'mae': 1.0844736607396044e-05, 'r2': 0.0, 'mape': np.float32(0.0010844737), 'smape': np.float32(0.0010844796)}
+2025-10-27 03:32:49,523 - src.training.trainer - INFO - Epoch 76/100
+2025-10-27 03:34:13,706 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:34:13,706 - src.training.trainer - INFO - Val Metrics: {'mse': 1.2789769243681803e-13, 'rmse': np.float64(3.5762786865234375e-07), 'mae': 3.5762786865234375e-07, 'r2': 0.0, 'mape': np.float32(3.5762787e-05), 'smape': np.float32(3.576279e-05)}
+2025-10-27 03:34:13,706 - src.training.trainer - INFO - Epoch 77/100
+2025-10-27 03:35:40,656 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:35:40,656 - src.training.trainer - INFO - Val Metrics: {'mse': 3.696576655887185e-10, 'rmse': np.float64(1.9226483443123928e-05), 'mae': 1.9226356016588397e-05, 'r2': 0.0, 'mape': np.float32(0.0019226356), 'smape': np.float32(0.001922654)}
+2025-10-27 03:35:40,656 - src.training.trainer - INFO - Epoch 78/100
+2025-10-27 03:37:06,047 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:37:06,047 - src.training.trainer - INFO - Val Metrics: {'mse': 3.552713678800501e-15, 'rmse': np.float64(5.960464477539063e-08), 'mae': 5.960464477539063e-08, 'r2': 0.0, 'mape': np.float32(5.9604645e-06), 'smape': np.float32(5.9604645e-06)}
+2025-10-27 03:37:06,047 - src.training.trainer - INFO - Epoch 79/100
+2025-10-27 03:38:30,684 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:38:30,684 - src.training.trainer - INFO - Val Metrics: {'mse': 1.4210854715202004e-14, 'rmse': np.float64(1.1920928955078125e-07), 'mae': 1.1920928955078125e-07, 'r2': 0.0, 'mape': np.float32(1.1920929e-05), 'smape': np.float32(1.1920931e-05)}
+2025-10-27 03:38:30,684 - src.training.trainer - INFO - Epoch 80/100
+2025-10-27 03:39:59,337 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:39:59,337 - src.training.trainer - INFO - Val Metrics: {'mse': 1.7408297026122455e-11, 'rmse': np.float64(4.172325134277344e-06), 'mae': 4.172325134277344e-06, 'r2': 0.0, 'mape': np.float32(0.0004172325), 'smape': np.float32(0.0004172334)}
+2025-10-27 03:39:59,337 - src.training.trainer - INFO - Epoch 81/100
+2025-10-27 03:41:28,247 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:41:28,247 - src.training.trainer - INFO - Val Metrics: {'mse': 9.979571856388869e-12, 'rmse': np.float64(3.159046035813481e-06), 'mae': 3.159046173095703e-06, 'r2': 0.0, 'mape': np.float32(0.00031590462), 'smape': np.float32(0.00031590508)}
+2025-10-27 03:41:28,247 - src.training.trainer - INFO - Epoch 82/100
+2025-10-27 03:42:59,436 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:42:59,436 - src.training.trainer - INFO - Val Metrics: {'mse': 1.5475620784854982e-11, 'rmse': np.float64(3.933906555175781e-06), 'mae': 3.933906555175781e-06, 'r2': 0.0, 'mape': np.float32(0.00039339066), 'smape': np.float32(0.00039339144)}
+2025-10-27 03:42:59,436 - src.training.trainer - INFO - Epoch 83/100
+2025-10-27 03:44:32,859 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:44:32,859 - src.training.trainer - INFO - Val Metrics: {'mse': 1.5084460069925143e-10, 'rmse': np.float64(1.2281880991902316e-05), 'mae': 1.2281865565455519e-05, 'r2': 0.0, 'mape': np.float32(0.0012281865), 'smape': np.float32(0.001228194)}
+2025-10-27 03:44:32,859 - src.training.trainer - INFO - Epoch 84/100
+2025-10-27 03:46:05,359 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:46:05,359 - src.training.trainer - INFO - Val Metrics: {'mse': 1.410071972379745e-11, 'rmse': np.float64(3.755092505358217e-06), 'mae': 3.7550926208496094e-06, 'r2': 0.0, 'mape': np.float32(0.00037550926), 'smape': np.float32(0.00037551)}
+2025-10-27 03:46:05,359 - src.training.trainer - INFO - Epoch 85/100
+2025-10-27 03:47:41,304 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:47:41,304 - src.training.trainer - INFO - Val Metrics: {'mse': 3.8689051962137455e-12, 'rmse': np.float64(1.9669532775878906e-06), 'mae': 1.9669532775878906e-06, 'r2': 0.0, 'mape': np.float32(0.00019669533), 'smape': np.float32(0.0001966955)}
+2025-10-27 03:47:41,304 - src.training.trainer - INFO - Epoch 86/100
+2025-10-27 03:49:16,475 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:49:16,475 - src.training.trainer - INFO - Val Metrics: {'mse': 1.4210854715202004e-14, 'rmse': np.float64(1.1920928955078125e-07), 'mae': 1.1920928955078125e-07, 'r2': 0.0, 'mape': np.float32(1.1920929e-05), 'smape': np.float32(1.1920931e-05)}
+2025-10-27 03:49:16,475 - src.training.trainer - INFO - Epoch 87/100
+2025-10-27 03:50:51,816 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:50:51,816 - src.training.trainer - INFO - Val Metrics: {'mse': 5.115907697472721e-13, 'rmse': np.float64(7.152557373046875e-07), 'mae': 7.152557373046875e-07, 'r2': 0.0, 'mape': np.float32(7.1525574e-05), 'smape': np.float32(7.1525596e-05)}
+2025-10-27 03:50:51,816 - src.training.trainer - INFO - Epoch 88/100
+2025-10-27 03:52:30,068 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:52:30,068 - src.training.trainer - INFO - Val Metrics: {'mse': 1.506306364362775e-11, 'rmse': np.float64(3.881116288341248e-06), 'mae': 3.880918484355789e-06, 'r2': 0.0, 'mape': np.float32(0.00038809184), 'smape': np.float32(0.00038809257)}
+2025-10-27 03:52:30,068 - src.training.trainer - INFO - Epoch 89/100
+2025-10-27 03:54:04,798 - src.training.trainer - INFO - Train Loss: 0.3137, Val Loss: 0.3133
+2025-10-27 03:54:04,798 - src.training.trainer - INFO - Val Metrics: {'mse': 4.088789751222066e-09, 'rmse': np.float64(6.394364511991842e-05), 'mae': 6.367687456076965e-05, 'r2': 0.0, 'mape': np.float32(0.0063676876), 'smape': np.float32(0.006367892)}
+2025-10-27 03:54:04,798 - src.training.trainer - INFO - Epoch 90/100
+2025-10-27 03:55:27,747 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:55:27,747 - src.training.trainer - INFO - Val Metrics: {'mse': 1.3110677907907098e-12, 'rmse': np.float64(1.1450186857823367e-06), 'mae': 1.143519398283388e-06, 'r2': 0.0, 'mape': np.float32(0.00011435194), 'smape': np.float32(0.00011435202)}
+2025-10-27 03:55:27,747 - src.training.trainer - INFO - Epoch 91/100
+2025-10-27 03:56:50,739 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:56:50,739 - src.training.trainer - INFO - Val Metrics: {'mse': 8.830196502381676e-14, 'rmse': np.float64(2.9715646555950416e-07), 'mae': 2.9246274380057e-07, 'r2': 0.0, 'mape': np.float32(2.9246274e-05), 'smape': np.float32(2.924628e-05)}
+2025-10-27 03:56:50,739 - src.training.trainer - INFO - Epoch 92/100
+2025-10-27 03:58:14,637 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:58:14,637 - src.training.trainer - INFO - Val Metrics: {'mse': 9.77877067515065e-12, 'rmse': np.float64(3.127102600675368e-06), 'mae': 3.126313686152571e-06, 'r2': 0.0, 'mape': np.float32(0.00031263137), 'smape': np.float32(0.0003126318)}
+2025-10-27 03:58:14,637 - src.training.trainer - INFO - Epoch 93/100
+2025-10-27 03:59:43,996 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 03:59:43,996 - src.training.trainer - INFO - Val Metrics: {'mse': 1.9229888135411516e-13, 'rmse': np.float64(4.3851896350570195e-07), 'mae': 4.305329639464617e-07, 'r2': 0.0, 'mape': np.float32(4.3053296e-05), 'smape': np.float32(4.3053304e-05)}
+2025-10-27 03:59:43,996 - src.training.trainer - INFO - Epoch 94/100
+2025-10-27 04:01:18,225 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 04:01:18,225 - src.training.trainer - INFO - Val Metrics: {'mse': 2.658763834095801e-12, 'rmse': np.float64(1.6305716280175491e-06), 'mae': 1.6301346477121115e-06, 'r2': 0.0, 'mape': np.float32(0.00016301346), 'smape': np.float32(0.00016301364)}
+2025-10-27 04:01:18,225 - src.training.trainer - INFO - Epoch 95/100
+2025-10-27 04:02:57,910 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 04:02:57,910 - src.training.trainer - INFO - Val Metrics: {'mse': 1.2945704282326352e-14, 'rmse': np.float64(1.1377919090205534e-07), 'mae': 1.085964385083571e-07, 'r2': 0.0, 'mape': np.float32(1.0859644e-05), 'smape': np.float32(1.0859644e-05)}
+2025-10-27 04:02:57,910 - src.training.trainer - INFO - Epoch 96/100
+2025-10-27 04:04:40,256 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 04:04:40,256 - src.training.trainer - INFO - Val Metrics: {'mse': 0.0, 'rmse': np.float64(0.0), 'mae': 0.0, 'r2': 1.0, 'mape': np.float32(0.0), 'smape': np.float32(0.0)}
+2025-10-27 04:04:40,256 - src.training.trainer - INFO - Epoch 97/100
+2025-10-27 04:06:23,857 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 04:06:23,857 - src.training.trainer - INFO - Val Metrics: {'mse': 3.552713678800501e-15, 'rmse': np.float64(5.960464477539063e-08), 'mae': 5.960464477539063e-08, 'r2': 0.0, 'mape': np.float32(5.9604645e-06), 'smape': np.float32(5.9604645e-06)}
+2025-10-27 04:06:23,857 - src.training.trainer - INFO - Epoch 98/100
+2025-10-27 04:08:09,384 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 04:08:09,384 - src.training.trainer - INFO - Val Metrics: {'mse': 5.566024258250174e-14, 'rmse': np.float64(2.3592423059639664e-07), 'mae': 2.3511017843702575e-07, 'r2': 0.0, 'mape': np.float32(2.3511018e-05), 'smape': np.float32(2.351102e-05)}
+2025-10-27 04:08:09,384 - src.training.trainer - INFO - Epoch 99/100
+2025-10-27 04:09:53,717 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 04:09:53,717 - src.training.trainer - INFO - Val Metrics: {'mse': 5.684341886080802e-14, 'rmse': np.float64(2.384185791015625e-07), 'mae': 2.384185791015625e-07, 'r2': 0.0, 'mape': np.float32(2.3841858e-05), 'smape': np.float32(2.3841862e-05)}
+2025-10-27 04:09:53,717 - src.training.trainer - INFO - Epoch 100/100
+2025-10-27 04:11:37,734 - src.training.trainer - INFO - Train Loss: 0.3133, Val Loss: 0.3133
+2025-10-27 04:11:37,734 - src.training.trainer - INFO - Val Metrics: {'mse': 1.350927425480819e-10, 'rmse': np.float64(1.1622940357245317e-05), 'mae': 1.162294029199984e-05, 'r2': 0.0, 'mape': np.float32(0.0011622941), 'smape': np.float32(0.0011623008)}
+2025-10-27 04:11:37,734 - src.training.trainer - INFO - Loaded best model
+2025-10-27 04:11:39,000 - src.training.trainer - INFO - Model saved to outputs\results\best_model.pth
+2025-10-27 04:11:39,000 - __main__ - INFO - Model saved to outputs\results\best_model.pth
+2025-10-27 04:11:39,000 - __main__ - INFO - Evaluating on test set...
+2025-10-27 04:12:05,525 - __main__ - INFO - Test results: {'mse': 1.3509320051507956e-10, 'rmse': np.float64(1.1622960058224392e-05), 'mae': 1.1622960300883278e-05, 'r2': 0.0, 'mape': np.float32(0.001162296), 'smape': np.float32(0.0011623027)}
+2025-10-27 04:12:05,553 - __main__ - INFO - Training completed successfully!
+2025-10-27 04:12:05,554 - __main__ - INFO - Results saved to: outputs\results\training_results.yaml
+2025-10-27 04:12:05,554 - __main__ - INFO - Model saved to: outputs\results\best_model.pth
