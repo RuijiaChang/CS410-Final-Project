@@ -195,10 +195,15 @@ class TwoTowerModel(nn.Module):
                  embedding_dim: int = 128,
                  user_hidden_dims: List[int] = [256, 128],
                  item_hidden_dims: List[int] = [256, 128],
-                 dropout_rate: float = 0.2):
+                 dropout_rate: float = 0.2,
+                 logit_scale: float = 1.0):
         super(TwoTowerModel, self).__init__()
         
         self.embedding_dim = embedding_dim
+        
+        # Learnable logit scale parameter
+        # This helps the model learn better representations by amplifying the similarity scores
+        self.logit_scale = nn.Parameter(torch.tensor(logit_scale))
         
         # Initialize towers
         self.user_tower = UserTower(
@@ -240,16 +245,37 @@ class TwoTowerModel(nn.Module):
                           user_embeddings: torch.Tensor,
                           item_embeddings: torch.Tensor) -> torch.Tensor:
         """
-        Compute cosine similarity between user and item embeddings
+        Compute scaled dot product similarity between user and item embeddings
         
         Args:
             user_embeddings: User embeddings tensor
             item_embeddings: Item embeddings tensor
             
         Returns:
-            Similarity scores tensor
+            Similarity scores tensor scaled by logit_scale
         """
-        return torch.mm(user_embeddings, item_embeddings.t())
+        # Clamp logit_scale to reasonable range
+        self.logit_scale.data = torch.clamp(self.logit_scale.data, min=0.01, max=100.0)
+        similarity = torch.mm(user_embeddings, item_embeddings.t())
+        return similarity * self.logit_scale
+    
+    def compute_similarity_dot(self,
+                              user_embeddings: torch.Tensor,
+                              item_embeddings: torch.Tensor) -> torch.Tensor:
+        """
+        Compute scaled dot product for element-wise similarity (for BCE loss)
+        
+        Args:
+            user_embeddings: User embeddings tensor
+            item_embeddings: Item embeddings tensor
+            
+        Returns:
+            Scaled dot product similarity scores for each pair
+        """
+        # Clamp logit_scale to reasonable range
+        self.logit_scale.data = torch.clamp(self.logit_scale.data, min=0.01, max=100.0)
+        similarity = torch.sum(user_embeddings * item_embeddings, dim=1)
+        return similarity * self.logit_scale
     
     def get_user_embeddings(self, user_features: Dict[str, torch.Tensor]) -> torch.Tensor:
         """Get user embeddings for inference"""

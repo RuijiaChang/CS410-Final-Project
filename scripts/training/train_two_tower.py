@@ -123,7 +123,8 @@ def main():
             embedding_dim=model_config.get('embedding_dim', 128),
             user_hidden_dims=model_config.get('user_mlp_hidden', [256, 128]),
             item_hidden_dims=model_config.get('item_mlp_hidden', [256, 128]),
-            dropout_rate=model_config.get('dropout', 0.1)
+            dropout_rate=model_config.get('dropout', 0.1),
+            logit_scale=model_config.get('logit_scale', 10.0)  # Learnable temperature parameter
         )
         
         total_params = sum(p.numel() for p in model.parameters())

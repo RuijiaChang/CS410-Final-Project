@@ -180,14 +180,14 @@ class TwoTowerTrainer:
                     text_features=batch['text_features']
                 )
                 
-                # Compute similarity scores (dot product between corresponding user and item)
+                # Compute scaled similarity scores for each user-item pair
                 # Each user-item pair should have high similarity (label=1 for validation set)
-                similarity_scores = torch.sum(user_embeddings * item_embeddings, dim=1)
+                similarity_scores = self.model.compute_similarity_dot(user_embeddings, item_embeddings)
                 
                 # Get labels (all should be 1 for validation set positive samples)
                 labels = batch['labels'].float()
                 
-                # Compute BCE loss for positive samples
+                # Compute BCE loss for positive samples with scaled logits
                 # We want similarity to be close to 1 for positive pairs
                 loss = F.binary_cross_entropy_with_logits(similarity_scores, labels)
                 
@@ -352,10 +352,10 @@ class TwoTowerTrainer:
                                       item_emb: torch.Tensor, 
                                       labels: torch.Tensor) -> torch.Tensor:
         """Compute positive-negative sample loss"""
-        # Compute similarity scores
-        similarity = torch.sum(user_emb * item_emb, dim=1)  # [batch_size]
+        # Compute scaled similarity scores using the model's logit scale
+        similarity_scores = self.model.compute_similarity_dot(user_emb, item_emb)
         
-        # Binary cross entropy loss
-        loss = F.binary_cross_entropy_with_logits(similarity, labels)
+        # Binary cross entropy loss with scaled logits
+        loss = F.binary_cross_entropy_with_logits(similarity_scores, labels)
         
         return loss

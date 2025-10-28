@@ -1,0 +1,22 @@
+# PyTorch ecosystem
+torch>=2.0.0
+torchvision>=0.15.0
+numpy>=1.23.0
+pandas>=1.5.0
+
+# Scikit-learn (for metrics)
+scikit-learn>=1.2.0
+
+# YAML parsing
+pyyaml>=6.0
+
+# Progress bars
+tqdm>=4.65.0
+
+# Visualization
+matplotlib>=3.6.0
+
+# Data processing (optional)
+faiss-cpu>=1.7.4
+pyarrow>=11.0.0
+
