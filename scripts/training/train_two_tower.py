@@ -123,7 +123,8 @@ def main():
             embedding_dim=model_config.get('embedding_dim', 128),
             user_hidden_dims=model_config.get('user_mlp_hidden', [256, 128]),
             item_hidden_dims=model_config.get('item_mlp_hidden', [256, 128]),
-            dropout_rate=model_config.get('dropout', 0.1)
+            dropout_rate=model_config.get('dropout', 0.1),
+            logit_scale=model_config.get('logit_scale', 10.0)  # Learnable temperature parameter
         )
         
         total_params = sum(p.numel() for p in model.parameters())
@@ -131,7 +132,7 @@ def main():
         
         # 5. Prepare training config
         trainer_config = {
-            'epochs': training_config.get('num_epochs', 100),
+            'epochs': training_config.get('num_epochs', 20),
             'learning_rate': training_config.get('learning_rate', 1e-3),
             'weight_decay': training_config.get('weight_decay', 1e-5),
             'optimizer': 'adam',

@@ -77,13 +77,14 @@ paths:
 data:
   data_path: data/processed
   text_embedding_path: data/processed/items_text_emb_title_main_category_average_rating_features_price_details_all-mpnet-base-v2.json
-  neg_ratio: 1
+  neg_ratio: 5  # Increase negative samples for better learning
   seed: 42
   emb_dim: 768
 
 model:
   embedding_dim: 128
   text_feature_dim: 768
+  logit_scale: 1.0  # Learnable temperature parameter, start with smaller value
 
   user_embedding_dims:
     user_id: 128
@@ -98,7 +99,7 @@ model:
 
 training:
   batch_size: 1024
-  num_epochs: 100
+  num_epochs: 20
   learning_rate: 1.0e-3
   weight_decay: 1.0e-5
   device: cuda  

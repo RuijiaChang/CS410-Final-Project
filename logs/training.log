@@ -385,3 +385,315 @@
 2025-10-27 04:12:05,553 - __main__ - INFO - Training completed successfully!
 2025-10-27 04:12:05,554 - __main__ - INFO - Results saved to: outputs\results\training_results.yaml
 2025-10-27 04:12:05,554 - __main__ - INFO - Model saved to: outputs\results\best_model.pth
+2025-10-28 12:04:32,780 - __main__ - INFO - Starting Two Tower Model training
+2025-10-28 12:04:32,780 - __main__ - INFO - Configuration: config/training_config.yaml
+2025-10-28 12:04:32,780 - __main__ - INFO - Initializing data processor...
+2025-10-28 12:04:32,780 - __main__ - INFO - Processing data...
+2025-10-28 12:05:25,201 - __main__ - INFO - Train samples: 407490
+2025-10-28 12:05:25,201 - __main__ - INFO - Val samples: 31204
+2025-10-28 12:05:25,201 - __main__ - INFO - Test samples: 92366
+2025-10-28 12:05:25,201 - __main__ - INFO - Creating data loaders...
+2025-10-28 12:05:25,202 - __main__ - INFO - Initializing model...
+2025-10-28 12:05:25,203 - __main__ - INFO - User feature dims: {'user_id': 93543}
+2025-10-28 12:05:25,203 - __main__ - INFO - Item feature dims: {'item_id': 159279, 'category': 1, 'brand': 1}
+2025-10-28 12:05:25,203 - __main__ - INFO - Text feature dim: 768
+2025-10-28 12:05:25,326 - __main__ - INFO - Model initialized with 32,723,073 parameters
+2025-10-28 12:05:25,327 - __main__ - INFO - Initializing trainer...
+2025-10-28 12:05:26,962 - __main__ - INFO - Starting training...
+2025-10-28 12:05:26,962 - src.training.trainer - INFO - Starting training...
+2025-10-28 12:05:26,962 - src.training.trainer - INFO - Epoch 1/20
+2025-10-28 12:06:45,892 - src.training.trainer - INFO - Train Loss: 0.2721, Val Loss: 0.2238
+2025-10-28 12:06:45,892 - src.training.trainer - INFO - Val Metrics: {'mse': 0.1468297243118286, 'rmse': np.float64(0.3831836691611852), 'mae': 0.38318365812301636, 'r2': 0.0, 'mape': np.float32(38.318367), 'smape': np.float32(32.15729)}
+2025-10-28 12:06:45,892 - src.training.trainer - INFO - New best model saved (Val Loss: 0.2238)
+2025-10-28 12:06:45,892 - src.training.trainer - INFO - Epoch 2/20
+2025-10-28 12:08:04,358 - src.training.trainer - INFO - Train Loss: 0.1932, Val Loss: 0.1659
+2025-10-28 12:08:04,359 - src.training.trainer - INFO - Val Metrics: {'mse': 0.5076741576194763, 'rmse': np.float64(0.7125125666396883), 'mae': 0.7125125527381897, 'r2': 0.0, 'mape': np.float32(71.25126), 'smape': np.float32(52.53524)}
+2025-10-28 12:08:04,359 - src.training.trainer - INFO - New best model saved (Val Loss: 0.1659)
+2025-10-28 12:08:04,360 - src.training.trainer - INFO - Epoch 3/20
+2025-10-28 12:09:34,855 - src.training.trainer - INFO - Train Loss: 0.1450, Val Loss: 0.1263
+2025-10-28 12:09:34,855 - src.training.trainer - INFO - Val Metrics: {'mse': 1.0109615325927734, 'rmse': np.float64(1.005465828654944), 'mae': 1.0054657459259033, 'r2': 0.0, 'mape': np.float32(100.54658), 'smape': np.float32(66.90915)}
+2025-10-28 12:09:34,855 - src.training.trainer - INFO - New best model saved (Val Loss: 0.1263)
+2025-10-28 12:09:34,856 - src.training.trainer - INFO - Epoch 4/20
+2025-10-28 12:11:54,503 - src.training.trainer - INFO - Train Loss: 0.1116, Val Loss: 0.0982
+2025-10-28 12:11:54,504 - src.training.trainer - INFO - Val Metrics: {'mse': 1.6155916452407837, 'rmse': np.float64(1.271059261104998), 'mae': 1.271059274673462, 'r2': 0.0, 'mape': np.float32(127.10593), 'smape': np.float32(77.715454)}
+2025-10-28 12:11:54,504 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0982)
+2025-10-28 12:11:54,504 - src.training.trainer - INFO - Epoch 5/20
+2025-10-28 12:14:29,306 - src.training.trainer - INFO - Train Loss: 0.0875, Val Loss: 0.0777
+2025-10-28 12:14:29,306 - src.training.trainer - INFO - Val Metrics: {'mse': 2.297311544418335, 'rmse': np.float64(1.5156884720873003), 'mae': 1.5156885385513306, 'r2': 0.0, 'mape': np.float32(151.56885), 'smape': np.float32(86.22427)}
+2025-10-28 12:14:29,306 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0777)
+2025-10-28 12:14:29,306 - src.training.trainer - INFO - Epoch 6/20
+2025-10-28 12:17:33,963 - src.training.trainer - INFO - Train Loss: 0.0697, Val Loss: 0.0623
+2025-10-28 12:17:33,963 - src.training.trainer - INFO - Val Metrics: {'mse': 3.042219638824463, 'rmse': np.float64(1.7441959863571705), 'mae': 1.7441959381103516, 'r2': 0.0, 'mape': np.float32(174.41959), 'smape': np.float32(93.16798)}
+2025-10-28 12:17:33,963 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0623)
+2025-10-28 12:17:33,963 - src.training.trainer - INFO - Epoch 7/20
+2025-10-28 12:20:23,867 - src.training.trainer - INFO - Train Loss: 0.0562, Val Loss: 0.0505
+2025-10-28 12:20:23,867 - src.training.trainer - INFO - Val Metrics: {'mse': 3.841686248779297, 'rmse': np.float64(1.9600220021161234), 'mae': 1.96002197265625, 'r2': 0.0, 'mape': np.float32(196.0022), 'smape': np.float32(98.990456)}
+2025-10-28 12:20:23,867 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0505)
+2025-10-28 12:20:23,867 - src.training.trainer - INFO - Epoch 8/20
+2025-10-28 12:23:33,030 - src.training.trainer - INFO - Train Loss: 0.0458, Val Loss: 0.0413
+2025-10-28 12:23:33,030 - src.training.trainer - INFO - Val Metrics: {'mse': 4.691035270690918, 'rmse': np.float64(2.1658797913759935), 'mae': 2.165879964828491, 'r2': 0.0, 'mape': np.float32(216.588), 'smape': np.float32(103.98187)}
+2025-10-28 12:23:33,031 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0413)
+2025-10-28 12:23:33,031 - src.training.trainer - INFO - Epoch 9/20
+2025-10-28 12:27:08,701 - src.training.trainer - INFO - Train Loss: 0.0376, Val Loss: 0.0340
+2025-10-28 12:27:08,701 - src.training.trainer - INFO - Val Metrics: {'mse': 5.586047649383545, 'rmse': np.float64(2.3634821026154493), 'mae': 2.3634819984436035, 'r2': 0.0, 'mape': np.float32(236.3482), 'smape': np.float32(108.33007)}
+2025-10-28 12:27:08,702 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0340)
+2025-10-28 12:27:08,702 - src.training.trainer - INFO - Epoch 10/20
+2025-10-28 12:30:16,233 - src.training.trainer - INFO - Train Loss: 0.0310, Val Loss: 0.0282
+2025-10-28 12:30:16,233 - src.training.trainer - INFO - Val Metrics: {'mse': 6.530134201049805, 'rmse': np.float64(2.5554127261657373), 'mae': 2.555412530899048, 'r2': 0.0, 'mape': np.float32(255.54126), 'smape': np.float32(112.19236)}
+2025-10-28 12:30:16,233 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0282)
+2025-10-28 12:30:16,233 - src.training.trainer - INFO - Epoch 11/20
+2025-10-28 12:33:59,528 - src.training.trainer - INFO - Train Loss: 0.0258, Val Loss: 0.0234
+2025-10-28 12:33:59,528 - src.training.trainer - INFO - Val Metrics: {'mse': 7.519733905792236, 'rmse': np.float64(2.7422133224445244), 'mae': 2.7422139644622803, 'r2': 0.0, 'mape': np.float32(274.2214), 'smape': np.float32(115.651215)}
+2025-10-28 12:33:59,528 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0234)
+2025-10-28 12:33:59,528 - src.training.trainer - INFO - Epoch 12/20
+2025-10-28 12:37:55,242 - src.training.trainer - INFO - Train Loss: 0.0215, Val Loss: 0.0196
+2025-10-28 12:37:55,242 - src.training.trainer - INFO - Val Metrics: {'mse': 8.553841590881348, 'rmse': np.float64(2.924695127852021), 'mae': 2.924694538116455, 'r2': 0.0, 'mape': np.float32(292.46945), 'smape': np.float32(118.77669)}
+2025-10-28 12:37:55,244 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0196)
+2025-10-28 12:37:55,244 - src.training.trainer - INFO - Epoch 13/20
+2025-10-28 12:42:14,046 - src.training.trainer - INFO - Train Loss: 0.0180, Val Loss: 0.0164
+2025-10-28 12:42:14,046 - src.training.trainer - INFO - Val Metrics: {'mse': 9.63260555267334, 'rmse': np.float64(3.103643915250804), 'mae': 3.1036438941955566, 'r2': 0.0, 'mape': np.float32(310.36438), 'smape': np.float32(121.62463)}
+2025-10-28 12:42:14,047 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0164)
+2025-10-28 12:42:14,047 - src.training.trainer - INFO - Epoch 14/20
+2025-10-28 12:45:11,106 - src.training.trainer - INFO - Train Loss: 0.0151, Val Loss: 0.0137
+2025-10-28 12:45:11,107 - src.training.trainer - INFO - Val Metrics: {'mse': 10.761815071105957, 'rmse': np.float64(3.2805205488010523), 'mae': 3.2805209159851074, 'r2': 0.0, 'mape': np.float32(328.0521), 'smape': np.float32(124.2499)}
+2025-10-28 12:45:11,107 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0137)
+2025-10-28 12:45:11,107 - src.training.trainer - INFO - Epoch 15/20
+2025-10-28 12:47:52,144 - src.training.trainer - INFO - Train Loss: 0.0126, Val Loss: 0.0116
+2025-10-28 12:47:52,145 - src.training.trainer - INFO - Val Metrics: {'mse': 11.936304092407227, 'rmse': np.float64(3.454895670263753), 'mae': 3.454895257949829, 'r2': 0.0, 'mape': np.float32(345.48953), 'smape': np.float32(126.67139)}
+2025-10-28 12:47:52,146 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0116)
+2025-10-28 12:47:52,146 - src.training.trainer - INFO - Epoch 16/20
+2025-10-28 12:52:02,609 - src.training.trainer - INFO - Train Loss: 0.0106, Val Loss: 0.0097
+2025-10-28 12:52:02,609 - src.training.trainer - INFO - Val Metrics: {'mse': 13.159000396728516, 'rmse': np.float64(3.6275336520463206), 'mae': 3.627533435821533, 'r2': 0.0, 'mape': np.float32(362.75336), 'smape': np.float32(128.92093)}
+2025-10-28 12:52:02,609 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0097)
+2025-10-28 12:52:02,609 - src.training.trainer - INFO - Epoch 17/20
+2025-10-28 12:54:41,586 - src.training.trainer - INFO - Train Loss: 0.0090, Val Loss: 0.0082
+2025-10-28 12:54:41,586 - src.training.trainer - INFO - Val Metrics: {'mse': 14.428396224975586, 'rmse': np.float64(3.7984728806423753), 'mae': 3.7984731197357178, 'r2': 0.0, 'mape': np.float32(379.84732), 'smape': np.float32(131.01633)}
+2025-10-28 12:54:41,586 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0082)
+2025-10-28 12:54:41,586 - src.training.trainer - INFO - Epoch 18/20
+2025-10-28 12:57:23,915 - src.training.trainer - INFO - Train Loss: 0.0076, Val Loss: 0.0069
+2025-10-28 12:57:23,915 - src.training.trainer - INFO - Val Metrics: {'mse': 15.75009536743164, 'rmse': np.float64(3.9686389817457117), 'mae': 3.9686388969421387, 'r2': 0.0, 'mape': np.float32(396.8639), 'smape': np.float32(132.98305)}
+2025-10-28 12:57:23,915 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0069)
+2025-10-28 12:57:23,915 - src.training.trainer - INFO - Epoch 19/20
+2025-10-28 13:00:07,131 - src.training.trainer - INFO - Train Loss: 0.0064, Val Loss: 0.0059
+2025-10-28 13:00:07,133 - src.training.trainer - INFO - Val Metrics: {'mse': 17.11849021911621, 'rmse': np.float64(4.137449724059038), 'mae': 4.137450218200684, 'r2': 0.0, 'mape': np.float32(413.74503), 'smape': np.float32(134.82634)}
+2025-10-28 13:00:07,133 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0059)
+2025-10-28 13:00:07,133 - src.training.trainer - INFO - Epoch 20/20
+2025-10-28 13:03:11,907 - src.training.trainer - INFO - Train Loss: 0.0054, Val Loss: 0.0050
+2025-10-28 13:03:11,907 - src.training.trainer - INFO - Val Metrics: {'mse': 18.535015106201172, 'rmse': np.float64(4.305231132726926), 'mae': 4.305231094360352, 'r2': 0.0, 'mape': np.float32(430.5231), 'smape': np.float32(136.56062)}
+2025-10-28 13:03:11,907 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0050)
+2025-10-28 13:03:11,913 - src.training.trainer - INFO - Loaded best model
+2025-10-28 13:03:12,388 - src.training.trainer - INFO - Model saved to outputs\results\best_model.pth
+2025-10-28 13:03:12,389 - __main__ - INFO - Model saved to outputs\results\best_model.pth
+2025-10-28 13:03:12,389 - __main__ - INFO - Evaluating on test set...
+2025-10-28 13:03:31,886 - __main__ - INFO - Test results: {'mse': 7.880888561911156e-15, 'rmse': np.float64(8.877436883420324e-08), 'mae': 7.010834224274731e-08, 'r2': 0.0, 'mape': np.float32(7.0108345e-06), 'smape': np.float32(7.0108345e-06)}
+2025-10-28 13:03:31,893 - __main__ - INFO - Training completed successfully!
+2025-10-28 13:03:31,893 - __main__ - INFO - Results saved to: outputs\results\training_results.yaml
+2025-10-28 13:03:31,894 - __main__ - INFO - Model saved to: outputs\results\best_model.pth
+2025-10-28 13:17:49,045 - __main__ - INFO - Starting Two Tower Model training
+2025-10-28 13:17:49,045 - __main__ - INFO - Configuration: config/training_config.yaml
+2025-10-28 13:17:49,045 - __main__ - INFO - Initializing data processor...
+2025-10-28 13:17:49,045 - __main__ - INFO - Processing data...
+2025-10-28 13:18:31,606 - __main__ - INFO - Train samples: 407490
+2025-10-28 13:18:31,606 - __main__ - INFO - Val samples: 31204
+2025-10-28 13:18:31,606 - __main__ - INFO - Test samples: 92366
+2025-10-28 13:18:31,611 - __main__ - INFO - Creating data loaders...
+2025-10-28 13:18:31,611 - __main__ - INFO - Initializing model...
+2025-10-28 13:18:31,611 - __main__ - INFO - User feature dims: {'user_id': 93543}
+2025-10-28 13:18:31,611 - __main__ - INFO - Item feature dims: {'item_id': 159279}
+2025-10-28 13:18:31,611 - __main__ - INFO - Text feature dim: 768
+2025-10-28 13:18:31,717 - __main__ - INFO - Model initialized with 32,657,281 parameters
+2025-10-28 13:18:31,717 - __main__ - INFO - Initializing trainer...
+2025-10-28 13:18:33,163 - __main__ - INFO - Starting training...
+2025-10-28 13:18:33,163 - src.training.trainer - INFO - Starting training...
+2025-10-28 13:18:33,163 - src.training.trainer - INFO - Epoch 1/20
+2025-10-28 13:19:51,235 - src.training.trainer - INFO - Train Loss: 0.2720, Val Loss: 0.2241
+2025-10-28 13:19:51,235 - src.training.trainer - INFO - Val Metrics: {'mse': 0.1454050987958908, 'rmse': np.float64(0.3813202050716573), 'mae': 0.38132020831108093, 'r2': 0.0, 'mape': np.float32(38.13202), 'smape': np.float32(32.025948)}
+2025-10-28 13:19:51,235 - src.training.trainer - INFO - New best model saved (Val Loss: 0.2241)
+2025-10-28 13:19:51,235 - src.training.trainer - INFO - Epoch 2/20
+2025-10-28 13:21:15,256 - src.training.trainer - INFO - Train Loss: 0.1936, Val Loss: 0.1662
+2025-10-28 13:21:15,256 - src.training.trainer - INFO - Val Metrics: {'mse': 0.5046650767326355, 'rmse': np.float64(0.7103978299042273), 'mae': 0.7103978395462036, 'r2': 0.0, 'mape': np.float32(71.03979), 'smape': np.float32(52.42019)}
+2025-10-28 13:21:15,256 - src.training.trainer - INFO - New best model saved (Val Loss: 0.1662)
+2025-10-28 13:21:15,256 - src.training.trainer - INFO - Epoch 3/20
+2025-10-28 13:22:32,887 - src.training.trainer - INFO - Train Loss: 0.1453, Val Loss: 0.1265
+2025-10-28 13:22:32,887 - src.training.trainer - INFO - Val Metrics: {'mse': 1.0065431594848633, 'rmse': np.float64(1.0032662455623946), 'mae': 1.0032662153244019, 'r2': 0.0, 'mape': np.float32(100.32662), 'smape': np.float32(66.81167)}
+2025-10-28 13:22:32,887 - src.training.trainer - INFO - New best model saved (Val Loss: 0.1265)
+2025-10-28 13:22:32,887 - src.training.trainer - INFO - Epoch 4/20
+2025-10-28 13:23:59,787 - src.training.trainer - INFO - Train Loss: 0.1118, Val Loss: 0.0984
+2025-10-28 13:23:59,787 - src.training.trainer - INFO - Val Metrics: {'mse': 1.6099083423614502, 'rmse': np.float64(1.2688216353615074), 'mae': 1.2688215970993042, 'r2': 0.0, 'mape': np.float32(126.88216), 'smape': np.float32(77.63174)}
+2025-10-28 13:23:59,787 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0984)
+2025-10-28 13:23:59,787 - src.training.trainer - INFO - Epoch 5/20
+2025-10-28 13:25:32,094 - src.training.trainer - INFO - Train Loss: 0.0877, Val Loss: 0.0779
+2025-10-28 13:25:32,094 - src.training.trainer - INFO - Val Metrics: {'mse': 2.2905781269073486, 'rmse': np.float64(1.5134656014945793), 'mae': 1.5134656429290771, 'r2': 0.0, 'mape': np.float32(151.34656), 'smape': np.float32(86.1523)}
+2025-10-28 13:25:32,094 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0779)
+2025-10-28 13:25:32,094 - src.training.trainer - INFO - Epoch 6/20
+2025-10-28 13:26:54,743 - src.training.trainer - INFO - Train Loss: 0.0699, Val Loss: 0.0625
+2025-10-28 13:26:54,744 - src.training.trainer - INFO - Val Metrics: {'mse': 3.0343430042266846, 'rmse': np.float64(1.741936567222436), 'mae': 1.7419365644454956, 'r2': 0.0, 'mape': np.float32(174.19365), 'smape': np.float32(93.10348)}
+2025-10-28 13:26:54,744 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0625)
+2025-10-28 13:26:54,744 - src.training.trainer - INFO - Epoch 7/20
+2025-10-28 13:28:14,347 - src.training.trainer - INFO - Train Loss: 0.0563, Val Loss: 0.0506
+2025-10-28 13:28:14,348 - src.training.trainer - INFO - Val Metrics: {'mse': 3.8328189849853516, 'rmse': np.float64(1.9577586636215791), 'mae': 1.9577586650848389, 'r2': 0.0, 'mape': np.float32(195.77586), 'smape': np.float32(98.9327)}
+2025-10-28 13:28:14,348 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0506)
+2025-10-28 13:28:14,348 - src.training.trainer - INFO - Epoch 8/20
+2025-10-28 13:29:47,306 - src.training.trainer - INFO - Train Loss: 0.0459, Val Loss: 0.0414
+2025-10-28 13:29:47,307 - src.training.trainer - INFO - Val Metrics: {'mse': 4.681243896484375, 'rmse': np.float64(2.163618241854227), 'mae': 2.1636178493499756, 'r2': 0.0, 'mape': np.float32(216.36179), 'smape': np.float32(103.92971)}
+2025-10-28 13:29:47,307 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0414)
+2025-10-28 13:29:47,307 - src.training.trainer - INFO - Epoch 9/20
+2025-10-28 13:31:29,040 - src.training.trainer - INFO - Train Loss: 0.0376, Val Loss: 0.0341
+2025-10-28 13:31:29,040 - src.training.trainer - INFO - Val Metrics: {'mse': 5.577052593231201, 'rmse': np.float64(2.3615784114086074), 'mae': 2.3615782260894775, 'r2': 0.0, 'mape': np.float32(236.15782), 'smape': np.float32(108.290085)}
+2025-10-28 13:31:29,040 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0341)
+2025-10-28 13:31:29,040 - src.training.trainer - INFO - Epoch 10/20
+2025-10-28 13:33:11,228 - src.training.trainer - INFO - Train Loss: 0.0311, Val Loss: 0.0282
+2025-10-28 13:33:11,228 - src.training.trainer - INFO - Val Metrics: {'mse': 6.519407272338867, 'rmse': np.float64(2.553312999289133), 'mae': 2.5533130168914795, 'r2': 0.0, 'mape': np.float32(255.3313), 'smape': np.float32(112.15186)}
+2025-10-28 13:33:11,228 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0282)
+2025-10-28 13:33:11,228 - src.training.trainer - INFO - Epoch 11/20
+2025-10-28 13:34:38,857 - src.training.trainer - INFO - Train Loss: 0.0258, Val Loss: 0.0235
+2025-10-28 13:34:38,857 - src.training.trainer - INFO - Val Metrics: {'mse': 7.507321834564209, 'rmse': np.float64(2.7399492394137903), 'mae': 2.7399492263793945, 'r2': 0.0, 'mape': np.float32(273.99493), 'smape': np.float32(115.61091)}
+2025-10-28 13:34:38,857 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0235)
+2025-10-28 13:34:38,862 - src.training.trainer - INFO - Epoch 12/20
+2025-10-28 13:36:28,222 - src.training.trainer - INFO - Train Loss: 0.0215, Val Loss: 0.0196
+2025-10-28 13:36:28,223 - src.training.trainer - INFO - Val Metrics: {'mse': 8.540607452392578, 'rmse': np.float64(2.9224317703571074), 'mae': 2.922431707382202, 'r2': 0.0, 'mape': np.float32(292.24316), 'smape': np.float32(118.739334)}
+2025-10-28 13:36:28,223 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0196)
+2025-10-28 13:36:28,224 - src.training.trainer - INFO - Epoch 13/20
+2025-10-28 13:39:20,504 - src.training.trainer - INFO - Train Loss: 0.0180, Val Loss: 0.0164
+2025-10-28 13:39:20,504 - src.training.trainer - INFO - Val Metrics: {'mse': 9.620469093322754, 'rmse': np.float64(3.1016881038110125), 'mae': 3.1016881465911865, 'r2': 0.0, 'mape': np.float32(310.16882), 'smape': np.float32(121.59458)}
+2025-10-28 13:39:20,505 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0164)
+2025-10-28 13:39:20,505 - src.training.trainer - INFO - Epoch 14/20
+2025-10-28 13:42:17,376 - src.training.trainer - INFO - Train Loss: 0.0151, Val Loss: 0.0138
+2025-10-28 13:42:17,376 - src.training.trainer - INFO - Val Metrics: {'mse': 10.746797561645508, 'rmse': np.float64(3.2782308585036395), 'mae': 3.278231143951416, 'r2': 0.0, 'mape': np.float32(327.82312), 'smape': np.float32(124.21702)}
+2025-10-28 13:42:17,377 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0138)
+2025-10-28 13:42:17,377 - src.training.trainer - INFO - Epoch 15/20
+2025-10-28 13:45:38,675 - src.training.trainer - INFO - Train Loss: 0.0127, Val Loss: 0.0116
+2025-10-28 13:45:38,675 - src.training.trainer - INFO - Val Metrics: {'mse': 11.920653343200684, 'rmse': np.float64(3.452629916918505), 'mae': 3.452629804611206, 'r2': 0.0, 'mape': np.float32(345.26297), 'smape': np.float32(126.64091)}
+2025-10-28 13:45:38,676 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0116)
+2025-10-28 13:45:38,676 - src.training.trainer - INFO - Epoch 16/20
+2025-10-28 13:49:06,931 - src.training.trainer - INFO - Train Loss: 0.0107, Val Loss: 0.0098
+2025-10-28 13:49:06,931 - src.training.trainer - INFO - Val Metrics: {'mse': 13.143579483032227, 'rmse': np.float64(3.625407491997586), 'mae': 3.6254069805145264, 'r2': 0.0, 'mape': np.float32(362.5407), 'smape': np.float32(128.89403)}
+2025-10-28 13:49:06,932 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0098)
+2025-10-28 13:49:06,932 - src.training.trainer - INFO - Epoch 17/20
+2025-10-28 13:52:26,999 - src.training.trainer - INFO - Train Loss: 0.0090, Val Loss: 0.0082
+2025-10-28 13:52:27,000 - src.training.trainer - INFO - Val Metrics: {'mse': 14.414284706115723, 'rmse': np.float64(3.796614900950019), 'mae': 3.7966151237487793, 'r2': 0.0, 'mape': np.float32(379.6615), 'smape': np.float32(130.99422)}
+2025-10-28 13:52:27,000 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0082)
+2025-10-28 13:52:27,000 - src.training.trainer - INFO - Epoch 18/20
+2025-10-28 13:54:59,761 - src.training.trainer - INFO - Train Loss: 0.0076, Val Loss: 0.0069
+2025-10-28 13:54:59,761 - src.training.trainer - INFO - Val Metrics: {'mse': 15.732193946838379, 'rmse': np.float64(3.9663829803535586), 'mae': 3.966383218765259, 'r2': 0.0, 'mape': np.float32(396.63834), 'smape': np.float32(132.9577)}
+2025-10-28 13:54:59,761 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0069)
+2025-10-28 13:54:59,761 - src.training.trainer - INFO - Epoch 19/20
+2025-10-28 13:57:27,376 - src.training.trainer - INFO - Train Loss: 0.0064, Val Loss: 0.0059
+2025-10-28 13:57:27,376 - src.training.trainer - INFO - Val Metrics: {'mse': 17.099546432495117, 'rmse': np.float64(4.135159783187962), 'mae': 4.135159015655518, 'r2': 0.0, 'mape': np.float32(413.5159), 'smape': np.float32(134.80206)}
+2025-10-28 13:57:27,376 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0059)
+2025-10-28 13:57:27,376 - src.training.trainer - INFO - Epoch 20/20
+2025-10-28 14:00:03,352 - src.training.trainer - INFO - Train Loss: 0.0054, Val Loss: 0.0050
+2025-10-28 14:00:03,352 - src.training.trainer - INFO - Val Metrics: {'mse': 18.515180587768555, 'rmse': np.float64(4.302926979135081), 'mae': 4.302927017211914, 'r2': 0.0, 'mape': np.float32(430.2927), 'smape': np.float32(136.53743)}
+2025-10-28 14:00:03,352 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0050)
+2025-10-28 14:00:03,358 - src.training.trainer - INFO - Loaded best model
+2025-10-28 14:00:03,699 - src.training.trainer - INFO - Model saved to outputs\results\best_model.pth
+2025-10-28 14:00:03,699 - __main__ - INFO - Model saved to outputs\results\best_model.pth
+2025-10-28 14:00:03,699 - __main__ - INFO - Evaluating on test set...
+2025-10-28 14:00:18,634 - __main__ - INFO - Test results: {'mse': 4.173105681544789e-14, 'rmse': np.float64(2.0428180735309714e-07), 'mae': 2.0111453125082335e-07, 'r2': 0.0, 'mape': np.float32(2.0111453e-05), 'smape': np.float32(2.0111456e-05)}
+2025-10-28 14:00:18,639 - __main__ - INFO - Training completed successfully!
+2025-10-28 14:00:18,639 - __main__ - INFO - Results saved to: outputs\results\training_results.yaml
+2025-10-28 14:00:18,639 - __main__ - INFO - Model saved to: outputs\results\best_model.pth
+2025-10-28 14:23:01,550 - __main__ - INFO - Starting Two Tower Model training
+2025-10-28 14:23:01,550 - __main__ - INFO - Configuration: config/training_config.yaml
+2025-10-28 14:23:01,550 - __main__ - INFO - Initializing data processor...
+2025-10-28 14:23:01,550 - __main__ - INFO - Processing data...
+2025-10-28 14:24:01,786 - __main__ - INFO - Train samples: 407490
+2025-10-28 14:24:01,786 - __main__ - INFO - Val samples: 31204
+2025-10-28 14:24:01,786 - __main__ - INFO - Test samples: 92366
+2025-10-28 14:24:01,786 - __main__ - INFO - Creating data loaders...
+2025-10-28 14:24:01,801 - __main__ - INFO - Initializing model...
+2025-10-28 14:24:01,801 - __main__ - INFO - User feature dims: {'user_id': 93543}
+2025-10-28 14:24:01,801 - __main__ - INFO - Item feature dims: {'item_id': 159279}
+2025-10-28 14:24:01,807 - __main__ - INFO - Text feature dim: 768
+2025-10-28 14:24:02,090 - __main__ - INFO - Model initialized with 32,657,281 parameters
+2025-10-28 14:24:02,090 - __main__ - INFO - Initializing trainer...
+2025-10-28 14:24:04,251 - __main__ - INFO - Starting training...
+2025-10-28 14:24:04,251 - src.training.trainer - INFO - Starting training...
+2025-10-28 14:24:04,251 - src.training.trainer - INFO - Epoch 1/20
+2025-10-28 14:26:18,183 - src.training.trainer - INFO - Train Loss: 0.2722, Val Loss: 0.2238
+2025-10-28 14:26:18,183 - src.training.trainer - INFO - Val Metrics: {'mse': 0.14663325250148773, 'rmse': np.float64(0.3829272156709258), 'mae': 0.3829272389411926, 'r2': 0.0, 'mape': np.float32(38.292725), 'smape': np.float32(32.139225)}
+2025-10-28 14:26:18,183 - src.training.trainer - INFO - New best model saved (Val Loss: 0.2238)
+2025-10-28 14:26:18,183 - src.training.trainer - INFO - Epoch 2/20
+2025-10-28 14:28:43,193 - src.training.trainer - INFO - Train Loss: 0.1933, Val Loss: 0.1659
+2025-10-28 14:28:43,193 - src.training.trainer - INFO - Val Metrics: {'mse': 0.5072267055511475, 'rmse': np.float64(0.7121985015086366), 'mae': 0.7121984958648682, 'r2': 0.0, 'mape': np.float32(71.21985), 'smape': np.float32(52.51817)}
+2025-10-28 14:28:43,193 - src.training.trainer - INFO - New best model saved (Val Loss: 0.1659)
+2025-10-28 14:28:43,193 - src.training.trainer - INFO - Epoch 3/20
+2025-10-28 14:31:02,014 - src.training.trainer - INFO - Train Loss: 0.1451, Val Loss: 0.1263
+2025-10-28 14:31:02,014 - src.training.trainer - INFO - Val Metrics: {'mse': 1.0103341341018677, 'rmse': np.float64(1.0051537862943498), 'mae': 1.0051538944244385, 'r2': 0.0, 'mape': np.float32(100.51539), 'smape': np.float32(66.89533)}
+2025-10-28 14:31:02,014 - src.training.trainer - INFO - New best model saved (Val Loss: 0.1263)
+2025-10-28 14:31:02,014 - src.training.trainer - INFO - Epoch 4/20
+2025-10-28 14:33:19,496 - src.training.trainer - INFO - Train Loss: 0.1116, Val Loss: 0.0982
+2025-10-28 14:33:19,496 - src.training.trainer - INFO - Val Metrics: {'mse': 1.6147865056991577, 'rmse': np.float64(1.2707425017284806), 'mae': 1.2707425355911255, 'r2': 0.0, 'mape': np.float32(127.07426), 'smape': np.float32(77.703606)}
+2025-10-28 14:33:19,496 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0982)
+2025-10-28 14:33:19,496 - src.training.trainer - INFO - Epoch 5/20
+2025-10-28 14:35:54,249 - src.training.trainer - INFO - Train Loss: 0.0875, Val Loss: 0.0777
+2025-10-28 14:35:54,249 - src.training.trainer - INFO - Val Metrics: {'mse': 2.296414852142334, 'rmse': np.float64(1.5153926395961985), 'mae': 1.5153926610946655, 'r2': 0.0, 'mape': np.float32(151.53926), 'smape': np.float32(86.21471)}
+2025-10-28 14:35:54,249 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0777)
+2025-10-28 14:35:54,249 - src.training.trainer - INFO - Epoch 6/20
+2025-10-28 14:38:27,070 - src.training.trainer - INFO - Train Loss: 0.0697, Val Loss: 0.0623
+2025-10-28 14:38:27,070 - src.training.trainer - INFO - Val Metrics: {'mse': 3.0410876274108887, 'rmse': np.float64(1.7438714480749116), 'mae': 1.7438714504241943, 'r2': 0.0, 'mape': np.float32(174.38715), 'smape': np.float32(93.158714)}
+2025-10-28 14:38:27,070 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0623)
+2025-10-28 14:38:27,070 - src.training.trainer - INFO - Epoch 7/20
+2025-10-28 14:40:56,067 - src.training.trainer - INFO - Train Loss: 0.0562, Val Loss: 0.0505
+2025-10-28 14:40:56,067 - src.training.trainer - INFO - Val Metrics: {'mse': 3.8403894901275635, 'rmse': np.float64(1.9596911721308445), 'mae': 1.9596912860870361, 'r2': 0.0, 'mape': np.float32(195.96913), 'smape': np.float32(98.98203)}
+2025-10-28 14:40:56,068 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0505)
+2025-10-28 14:40:56,068 - src.training.trainer - INFO - Epoch 8/20
+2025-10-28 14:43:40,899 - src.training.trainer - INFO - Train Loss: 0.0458, Val Loss: 0.0413
+2025-10-28 14:43:40,899 - src.training.trainer - INFO - Val Metrics: {'mse': 4.689589023590088, 'rmse': np.float64(2.165545895055122), 'mae': 2.16554594039917, 'r2': 0.0, 'mape': np.float32(216.5546), 'smape': np.float32(103.97417)}
+2025-10-28 14:43:40,904 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0413)
+2025-10-28 14:43:40,904 - src.training.trainer - INFO - Epoch 9/20
+2025-10-28 14:46:15,035 - src.training.trainer - INFO - Train Loss: 0.0376, Val Loss: 0.0340
+2025-10-28 14:46:15,035 - src.training.trainer - INFO - Val Metrics: {'mse': 5.5859222412109375, 'rmse': np.float64(2.36345557208316), 'mae': 2.3634557723999023, 'r2': 0.0, 'mape': np.float32(236.34558), 'smape': np.float32(108.329544)}
+2025-10-28 14:46:15,035 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0340)
+2025-10-28 14:46:15,035 - src.training.trainer - INFO - Epoch 10/20
+2025-10-28 14:49:08,998 - src.training.trainer - INFO - Train Loss: 0.0310, Val Loss: 0.0282
+2025-10-28 14:49:08,998 - src.training.trainer - INFO - Val Metrics: {'mse': 6.529179573059082, 'rmse': np.float64(2.555225933857725), 'mae': 2.5552258491516113, 'r2': 0.0, 'mape': np.float32(255.52258), 'smape': np.float32(112.18874)}
+2025-10-28 14:49:08,998 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0282)
+2025-10-28 14:49:08,998 - src.training.trainer - INFO - Epoch 11/20
+2025-10-28 14:51:27,941 - src.training.trainer - INFO - Train Loss: 0.0258, Val Loss: 0.0234
+2025-10-28 14:51:27,941 - src.training.trainer - INFO - Val Metrics: {'mse': 7.5177836418151855, 'rmse': np.float64(2.741857699045519), 'mae': 2.7418580055236816, 'r2': 0.0, 'mape': np.float32(274.1858), 'smape': np.float32(115.64485)}
+2025-10-28 14:51:27,941 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0234)
+2025-10-28 14:51:27,941 - src.training.trainer - INFO - Epoch 12/20
+2025-10-28 14:53:14,645 - src.training.trainer - INFO - Train Loss: 0.0215, Val Loss: 0.0196
+2025-10-28 14:53:14,645 - src.training.trainer - INFO - Val Metrics: {'mse': 8.551526069641113, 'rmse': np.float64(2.924299244202124), 'mae': 2.9242987632751465, 'r2': 0.0, 'mape': np.float32(292.42987), 'smape': np.float32(118.77016)}
+2025-10-28 14:53:14,645 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0196)
+2025-10-28 14:53:14,645 - src.training.trainer - INFO - Epoch 13/20
+2025-10-28 14:55:14,229 - src.training.trainer - INFO - Train Loss: 0.0179, Val Loss: 0.0164
+2025-10-28 14:55:14,229 - src.training.trainer - INFO - Val Metrics: {'mse': 9.632074356079102, 'rmse': np.float64(3.1035583377921383), 'mae': 3.103557586669922, 'r2': 0.0, 'mape': np.float32(310.35577), 'smape': np.float32(121.6233)}
+2025-10-28 14:55:14,229 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0164)
+2025-10-28 14:55:14,229 - src.training.trainer - INFO - Epoch 14/20
+2025-10-28 14:57:17,410 - src.training.trainer - INFO - Train Loss: 0.0151, Val Loss: 0.0137
+2025-10-28 14:57:17,410 - src.training.trainer - INFO - Val Metrics: {'mse': 10.759018898010254, 'rmse': np.float64(3.2800943428520855), 'mae': 3.2800943851470947, 'r2': 0.0, 'mape': np.float32(328.00943), 'smape': np.float32(124.24376)}
+2025-10-28 14:57:17,410 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0137)
+2025-10-28 14:57:17,410 - src.training.trainer - INFO - Epoch 15/20
+2025-10-28 15:00:43,757 - src.training.trainer - INFO - Train Loss: 0.0127, Val Loss: 0.0116
+2025-10-28 15:00:43,757 - src.training.trainer - INFO - Val Metrics: {'mse': 11.933660507202148, 'rmse': np.float64(3.454513063689606), 'mae': 3.4545133113861084, 'r2': 0.0, 'mape': np.float32(345.45132), 'smape': np.float32(126.66624)}
+2025-10-28 15:00:43,757 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0116)
+2025-10-28 15:00:43,757 - src.training.trainer - INFO - Epoch 16/20
+2025-10-28 15:08:05,802 - src.training.trainer - INFO - Train Loss: 0.0106, Val Loss: 0.0097
+2025-10-28 15:08:05,852 - src.training.trainer - INFO - Val Metrics: {'mse': 13.1563138961792, 'rmse': np.float64(3.6271633401570433), 'mae': 3.6271631717681885, 'r2': 0.0, 'mape': np.float32(362.7163), 'smape': np.float32(128.91624)}
+2025-10-28 15:08:05,867 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0097)
+2025-10-28 15:08:05,882 - src.training.trainer - INFO - Epoch 17/20
+2025-10-28 15:13:27,569 - src.training.trainer - INFO - Train Loss: 0.0090, Val Loss: 0.0082
+2025-10-28 15:13:27,573 - src.training.trainer - INFO - Val Metrics: {'mse': 14.427249908447266, 'rmse': np.float64(3.79832198588367), 'mae': 3.7983219623565674, 'r2': 0.0, 'mape': np.float32(379.83218), 'smape': np.float32(131.01453)}
+2025-10-28 15:13:27,573 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0082)
+2025-10-28 15:13:27,573 - src.training.trainer - INFO - Epoch 18/20
+2025-10-28 15:20:17,199 - src.training.trainer - INFO - Train Loss: 0.0076, Val Loss: 0.0069
+2025-10-28 15:20:17,199 - src.training.trainer - INFO - Val Metrics: {'mse': 15.749777793884277, 'rmse': np.float64(3.9685989711590004), 'mae': 3.9685988426208496, 'r2': 0.0, 'mape': np.float32(396.8599), 'smape': np.float32(132.98262)}
+2025-10-28 15:20:17,199 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0069)
+2025-10-28 15:20:17,199 - src.training.trainer - INFO - Epoch 19/20
+2025-10-28 15:27:19,102 - src.training.trainer - INFO - Train Loss: 0.0064, Val Loss: 0.0059
+2025-10-28 15:27:19,102 - src.training.trainer - INFO - Val Metrics: {'mse': 17.11892318725586, 'rmse': np.float64(4.137502046797785), 'mae': 4.1375017166137695, 'r2': 0.0, 'mape': np.float32(413.75018), 'smape': np.float32(134.82689)}
+2025-10-28 15:27:19,102 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0059)
+2025-10-28 15:27:19,102 - src.training.trainer - INFO - Epoch 20/20
+2025-10-28 15:32:45,780 - src.training.trainer - INFO - Train Loss: 0.0054, Val Loss: 0.0050
+2025-10-28 15:32:45,780 - src.training.trainer - INFO - Val Metrics: {'mse': 18.535396575927734, 'rmse': np.float64(4.305275435547386), 'mae': 4.3052754402160645, 'r2': 0.0, 'mape': np.float32(430.52756), 'smape': np.float32(136.56105)}
+2025-10-28 15:32:45,780 - src.training.trainer - INFO - New best model saved (Val Loss: 0.0050)
+2025-10-28 15:32:45,795 - src.training.trainer - INFO - Loaded best model
+2025-10-28 15:32:48,121 - src.training.trainer - INFO - Model saved to outputs\results\best_model.pth
+2025-10-28 15:32:48,121 - __main__ - INFO - Model saved to outputs\results\best_model.pth
+2025-10-28 15:32:48,121 - __main__ - INFO - Evaluating on test set...
+2025-10-28 15:33:46,301 - __main__ - INFO - Test results: {'mse': 2.0012793505719273e-12, 'rmse': np.float64(1.4146658087944047e-06), 'mae': 1.4143864746074541e-06, 'r2': 0.0, 'mape': np.float32(0.00014143865), 'smape': np.float32(0.00014143875)}
+2025-10-28 15:33:46,326 - __main__ - INFO - Training completed successfully!
+2025-10-28 15:33:46,326 - __main__ - INFO - Results saved to: outputs\results\training_results.yaml
+2025-10-28 15:33:46,326 - __main__ - INFO - Model saved to: outputs\results\best_model.pth
