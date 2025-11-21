@@ -1,0 +1,83 @@
+1. Artifacts produced by ML
+The ML will deliver five files.
+These constitute the only inputs required by backend.
+
+✅ 1. user_emb.npy
+
+Shape: (num_users, embedding_dim)
+
+Type: float32 NumPy array
+
+Contains user tower output vectors.
+
+✅ 2. item_emb.npy
+
+Shape: (num_items, embedding_dim)
+
+Type: float32 NumPy array
+
+Contains item tower output vectors.
+
+✅ 3. uid2idx.json
+
+Mapping file:
+
+{
+  "A3FXXXXXX": 0,
+  "A1ZXXXXXX": 1
+}
+
+Maps original user_id → row index in user_emb.npy.
+
+✅ 4. iid2idx.json
+
+Mapping file:
+
+{
+  "B0001234": 0,
+  "B07XXXXXX": 1
+}
+
+
+Maps item_id → row index in item_emb.npy.
+
+✅ 5. items_meta.parquet
+
+A table containing metadata for each item index:
+
+item_id	title	image_url	category	brand	…
+B01ABC	…	…	…	…	
+
+Note: Row order must match item_emb.npy.
+
+2. Where These Files Are Stored
+Machine Learning Core/results/models/
+
+3. Backend responsibility
+
+Backend exists under:
+
+Backend API/backend/app/
+
+Backend is responsible for:
+
+Loading the embeddings & metadata
+
+Building or loading a FAISS index
+
+Implementing recall logic
+
+Exposing REST APIs
+
+Serving data to frontend
+
+4. Frontend Integration
+Frontend should display:
+
+product image
+
+title
+
+score
+
+userid

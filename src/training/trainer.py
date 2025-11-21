@@ -1,29 +1,3 @@
-"""
-Training utilities for Two Tower Model
-
-Trainer Input/Output:
-====================
-Input:
-- model: TwoTowerModel - The two-tower model to train
-- train_loader: DataLoader - Training data with positive/negative samples
-- val_loader: DataLoader - Validation data
-- config: dict - Training configuration
-
-Output:
-- training_results: dict - Training results including losses and metrics
-  {
-      'train_losses': List[float],
-      'val_losses': List[float], 
-      'val_metrics': List[dict],
-      'best_val_loss': float
-  }
-
-Example:
---------
-trainer = TwoTowerTrainer(model, train_loader, val_loader, config)
-results = trainer.train()
-"""
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -33,7 +7,6 @@ import numpy as np
 from typing import Dict, List, Tuple, Optional
 import logging
 from pathlib import Path
-import json
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
@@ -44,318 +17,226 @@ logger = logging.getLogger(__name__)
 
 
 class TwoTowerTrainer:
-    """Trainer class for Two Tower Model"""
-    
-    def __init__(self,
-                 model: TwoTowerModel,
-                 train_loader: DataLoader,
-                 val_loader: DataLoader,
-                 config: Dict):
-        """
-        Initialize trainer
-        
-        Args:
-            model: Two Tower Model instance
-            train_loader: Training data loader
-            val_loader: Validation data loader
-            config: Training configuration
-        """
+    """Trainer class for Two Tower Model (Recall Version)"""
+
+    def __init__(
+        self,
+        model: TwoTowerModel,
+        train_loader: DataLoader,
+        val_loader: DataLoader,
+        config: Dict,
+    ):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.config = config
-        
-        # Setup device
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
-        
-        # Setup optimizer and scheduler
+
         self.optimizer = self._setup_optimizer()
         self.scheduler = self._setup_scheduler()
-        
-        # Setup loss function
-        self.criterion = nn.MSELoss()
-        
-        # Training history
+
         self.train_losses = []
         self.val_losses = []
         self.val_metrics = []
-        
-    def _setup_optimizer(self) -> optim.Optimizer:
-        """Setup optimizer"""
-        if self.config['optimizer'] == 'adam':
+
+    # -----------------------------
+    # Optimizer / Scheduler
+    # -----------------------------
+    def _setup_optimizer(self):
+        if self.config["optimizer"] == "adam":
             return optim.Adam(
                 self.model.parameters(),
-                lr=self.config['learning_rate'],
-                weight_decay=self.config['weight_decay']
+                lr=self.config["learning_rate"],
+                weight_decay=self.config["weight_decay"],
             )
-        elif self.config['optimizer'] == 'sgd':
+        elif self.config["optimizer"] == "sgd":
             return optim.SGD(
                 self.model.parameters(),
-                lr=self.config['learning_rate'],
-                momentum=self.config.get('momentum', 0.9),
-                weight_decay=self.config['weight_decay']
+                lr=self.config["learning_rate"],
+                momentum=self.config.get("momentum", 0.9),
+                weight_decay=self.config["weight_decay"],
             )
         else:
-            raise ValueError(f"Unsupported optimizer: {self.config['optimizer']}")
-    
-    def _setup_scheduler(self) -> Optional[optim.lr_scheduler._LRScheduler]:
-        """Setup learning rate scheduler"""
-        if self.config.get('scheduler') == 'step':
+            raise ValueError(f"Unsupported optimizer {self.config['optimizer']}")
+
+    def _setup_scheduler(self):
+        if self.config.get("scheduler") == "step":
             return optim.lr_scheduler.StepLR(
                 self.optimizer,
-                step_size=self.config.get('step_size', 10),
-                gamma=self.config.get('gamma', 0.1)
+                step_size=self.config.get("step_size", 10),
+                gamma=self.config.get("gamma", 0.1),
             )
-        elif self.config.get('scheduler') == 'cosine':
+        elif self.config.get("scheduler") == "cosine":
             return optim.lr_scheduler.CosineAnnealingLR(
-                self.optimizer,
-                T_max=self.config['epochs']
+                self.optimizer, T_max=self.config["epochs"]
             )
-        else:
-            return None
-    
-    def train_epoch(self) -> float:
-        """Train for one epoch using positive-negative samples"""
+        return None
+
+    # -----------------------------
+    # Train one epoch
+    # -----------------------------
+    def train_epoch(self):
         self.model.train()
         total_loss = 0.0
-        num_batches = 0
-        
-        progress_bar = tqdm(self.train_loader, desc="Training")
-        
-        for batch in progress_bar:
-            # Move batch to device
+
+        pbar = tqdm(self.train_loader, desc="Training")
+
+        for batch in pbar:
             batch = self._move_batch_to_device(batch)
-            
-            # Forward pass
-            user_embeddings, item_embeddings = self.model(
-                user_features=batch['user_features'],
-                item_features=batch['item_features'],
-                text_features=batch['text_features']
+
+            user_emb, item_emb = self.model(
+                batch["user_features"],
+                batch["item_features"],
+                batch["text_features"],
             )
-            
-            # Compute positive-negative loss
-            loss = self._compute_positive_negative_loss(
-                user_embeddings, item_embeddings, batch['labels']
-            )
-            
-            # Backward pass
+
+            loss = self._compute_loss(user_emb, item_emb, batch["labels"])
+
             self.optimizer.zero_grad()
             loss.backward()
-            
-            # Gradient clipping
-            if self.config.get('grad_clip_norm'):
-                torch.nn.utils.clip_grad_norm_(
-                    self.model.parameters(),
-                    self.config['grad_clip_norm']
-                )
-            
             self.optimizer.step()
-            
+
             total_loss += loss.item()
-            num_batches += 1
-            
-            # Update progress bar
-            progress_bar.set_postfix({'loss': f'{loss.item():.4f}'})
-        
-        return total_loss / num_batches
-    
-    def validate_epoch(self) -> Tuple[float, Dict]:
-        """Validate for one epoch"""
+
+            pbar.set_postfix({"loss": f"{loss.item():.4f}"})
+
+        return total_loss / len(self.train_loader)
+
+    # -----------------------------
+    # Validate one epoch
+    # -----------------------------
+    def validate_epoch(self):
         self.model.eval()
         total_loss = 0.0
-        num_batches = 0
-        all_predictions = []
-        all_targets = []
-        
+        preds, targs = [], []
+
         with torch.no_grad():
             for batch in tqdm(self.val_loader, desc="Validation"):
-                # Move batch to device
                 batch = self._move_batch_to_device(batch)
-                
-                # Forward pass
-                user_embeddings, item_embeddings = self.model(
-                    user_features=batch['user_features'],
-                    item_features=batch['item_features'],
-                    text_features=batch['text_features']
+                user_emb, item_emb = self.model(
+                    batch["user_features"],
+                    batch["item_features"],
+                    batch["text_features"],
                 )
-                
-                # Compute scaled similarity scores for each user-item pair
-                # Each user-item pair should have high similarity (label=1 for validation set)
-                similarity_scores = self.model.compute_similarity_dot(user_embeddings, item_embeddings)
-                
-                # Get labels (all should be 1 for validation set positive samples)
-                labels = batch['labels'].float()
-                
-                # Compute BCE loss for positive samples with scaled logits
-                # We want similarity to be close to 1 for positive pairs
-                loss = F.binary_cross_entropy_with_logits(similarity_scores, labels)
-                
+
+                logits = self.model.compute_similarity_dot(user_emb, item_emb)
+                labels = batch["labels"].float()
+
+                loss = F.binary_cross_entropy_with_logits(logits, labels)
+
                 total_loss += loss.item()
-                num_batches += 1
-                
-                # Collect predictions and targets for metrics
-                all_predictions.extend(similarity_scores.cpu().numpy())
-                all_targets.extend(labels.cpu().numpy())
-        
-        # Calculate metrics
+                preds.extend(logits.cpu().numpy())
+                targs.extend(labels.cpu().numpy())
+
         try:
-            metrics = calculate_metrics(
-                np.array(all_targets),
-                np.array(all_predictions)
-            )
-        except Exception as e:
-            logger.warning(f"Could not calculate metrics: {e}")
+            metrics = calculate_metrics(np.array(targs), np.array(preds))
+        except:
             metrics = {}
-        
-        return total_loss / num_batches, metrics
-    
+
+        return total_loss / len(self.val_loader), metrics
+
+    # -----------------------------
+    # Move batch to device
+    # -----------------------------
     def _move_batch_to_device(self, batch: Dict) -> Dict:
-        """Move batch to device"""
-        device_batch = {}
-        
-        # Move user features
-        device_batch['user_features'] = {}
-        for key, value in batch['user_features'].items():
-            device_batch['user_features'][key] = value.to(self.device)
-        
-        # Move item features
-        device_batch['item_features'] = {}
-        for key, value in batch['item_features'].items():
-            device_batch['item_features'][key] = value.to(self.device)
-        
-        # Move other tensors
-        device_batch['text_features'] = batch['text_features'].to(self.device)
-        device_batch['labels'] = batch['labels'].to(self.device)
-        device_batch['ratings'] = batch['ratings'].to(self.device)
-        device_batch['targets'] = device_batch['labels']  # Alias for compatibility
-        
-        return device_batch
-    
+        result = {
+            "user_features": {
+                k: v.to(self.device) for k, v in batch["user_features"].items()
+            },
+            "item_features": {
+                k: v.to(self.device) for k, v in batch["item_features"].items()
+            },
+            "text_features": batch["text_features"].to(self.device),
+            "labels": batch["labels"].to(self.device),
+            "ratings": batch["ratings"].to(self.device),
+        }
+        return result
+
+    # -----------------------------
+    # Main training loop
+    # -----------------------------
     def train(self) -> Dict:
-        """Train the model"""
-        logger.info("Starting training...")
-        
-        best_val_loss = float('inf')
-        best_model_state = None
-        
-        for epoch in range(self.config['epochs']):
-            logger.info(f"Epoch {epoch + 1}/{self.config['epochs']}")
-            
-            # Train
+        logger.info("====== Two-Tower Training Started ======")
+        print("====== Two-Tower Training Started ======")
+
+        best_val = float("inf")
+        best_model = None
+
+        for epoch in range(self.config["epochs"]):
+            logger.info(f"Epoch {epoch+1}/{self.config['epochs']}")
+            print(f"\nEpoch {epoch+1}/{self.config['epochs']}")
+
             train_loss = self.train_epoch()
-            self.train_losses.append(train_loss)
-            
-            # Validate
             val_loss, val_metrics = self.validate_epoch()
+
+            self.train_losses.append(train_loss)
             self.val_losses.append(val_loss)
             self.val_metrics.append(val_metrics)
-            
-            # Update learning rate
+
+            msg = f"Train Loss={train_loss:.4f}, Val Loss={val_loss:.4f}"
+            print(msg)
+            logger.info(msg)
+
+            msg2 = f"Val Metrics={val_metrics}"
+            print(msg2)
+            logger.info(msg2)
+
+            if val_loss < best_val:
+                best_val = val_loss
+                best_model = self.model.state_dict().copy()
+                logger.info("— Best model updated —")
+                print("— Best model updated —")
+
             if self.scheduler:
                 self.scheduler.step()
-            
-            # Log metrics
-            logger.info(f"Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
-            logger.info(f"Val Metrics: {val_metrics}")
-            
-            # Save best model
-            if val_loss < best_val_loss:
-                best_val_loss = val_loss
-                best_model_state = self.model.state_dict().copy()
-                logger.info(f"New best model saved (Val Loss: {val_loss:.4f})")
-            
-            # Early stopping
-            if self.config.get('early_stopping_patience'):
-                if epoch >= self.config['early_stopping_patience']:
-                    recent_val_losses = self.val_losses[-self.config['early_stopping_patience']:]
-                    if all(val_loss >= recent_val_losses[i] for i in range(1, len(recent_val_losses))):
-                        logger.info("Early stopping triggered")
-                        break
-        
+
         # Load best model
-        if best_model_state:
-            self.model.load_state_dict(best_model_state)
-            logger.info("Loaded best model")
-        
-        # Plot training history
+        if best_model:
+            self.model.load_state_dict(best_model)
+            logger.info("Loaded best model.")
+
+        # Save training curve
         self._plot_training_history()
-        
+
         return {
-            'train_losses': self.train_losses,
-            'val_losses': self.val_losses,
-            'val_metrics': self.val_metrics,
-            'best_val_loss': best_val_loss
+            "train_losses": self.train_losses,
+            "val_losses": self.val_losses,
+            "val_metrics": self.val_metrics,
+            "best_val_loss": best_val,
         }
-    
+
+    # -----------------------------
+    # Plot training history
+    # -----------------------------
     def _plot_training_history(self):
-        """Plot training history"""
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-        
-        # Plot losses
-        ax1.plot(self.train_losses, label='Train Loss')
-        ax1.plot(self.val_losses, label='Validation Loss')
-        ax1.set_xlabel('Epoch')
-        ax1.set_ylabel('Loss')
-        ax1.set_title('Training and Validation Loss')
-        ax1.legend()
-        ax1.grid(True)
-        
-        # Plot metrics
-        if self.val_metrics:
-            metrics_names = list(self.val_metrics[0].keys())
-            for metric_name in metrics_names:
-                metric_values = [metrics[metric_name] for metrics in self.val_metrics]
-                ax2.plot(metric_values, label=metric_name)
-            ax2.set_xlabel('Epoch')
-            ax2.set_ylabel('Metric Value')
-            ax2.set_title('Validation Metrics')
-            ax2.legend()
-            ax2.grid(True)
-        
-        plt.tight_layout()
-        # Save plot to a sensible default location
-        plot_dir = Path('outputs/results/plots')
+        plot_dir = Path("outputs/results/plots")
         plot_dir.mkdir(parents=True, exist_ok=True)
-        plt.savefig(plot_dir / 'training_history.png')
+
+        fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+        # Loss curve
+        axes[0].plot(self.train_losses, label="Train")
+        axes[0].plot(self.val_losses, label="Validation")
+        axes[0].set_title("Loss Curve")
+        axes[0].legend()
+
+        # Metric curve
+        if self.val_metrics:
+            for key in self.val_metrics[0].keys():
+                axes[1].plot([m[key] for m in self.val_metrics], label=key)
+            axes[1].set_title("Validation Metrics")
+            axes[1].legend()
+
+        plt.tight_layout()
+        plt.savefig(plot_dir / "training_history.png")
         plt.close()
-    
-    def save_model(self, path: str):
-        """Save model and training history"""
-        Path(path).parent.mkdir(parents=True, exist_ok=True)
-        
-        # Save model state
-        torch.save({
-            'model_state_dict': self.model.state_dict(),
-            'config': self.config,
-            'train_losses': self.train_losses,
-            'val_losses': self.val_losses,
-            'val_metrics': self.val_metrics
-        }, path)
-        
-        logger.info(f"Model saved to {path}")
-    
-    def load_model(self, path: str):
-        """Load model from checkpoint"""
-        checkpoint = torch.load(path, map_location=self.device)
-        
-        self.model.load_state_dict(checkpoint['model_state_dict'])
-        self.train_losses = checkpoint.get('train_losses', [])
-        self.val_losses = checkpoint.get('val_losses', [])
-        self.val_metrics = checkpoint.get('val_metrics', [])
-        
-        logger.info(f"Model loaded from {path}")
-    
-    
-    def _compute_positive_negative_loss(self, 
-                                      user_emb: torch.Tensor, 
-                                      item_emb: torch.Tensor, 
-                                      labels: torch.Tensor) -> torch.Tensor:
-        """Compute positive-negative sample loss"""
-        # Compute scaled similarity scores using the model's logit scale
-        similarity_scores = self.model.compute_similarity_dot(user_emb, item_emb)
-        
-        # Binary cross entropy loss with scaled logits
-        loss = F.binary_cross_entropy_with_logits(similarity_scores, labels)
-        
-        return loss
+
+    # -----------------------------
+    # Loss computation
+    # -----------------------------
+    def _compute_loss(self, user_emb, item_emb, labels):
+        logits = self.model.compute_similarity_dot(user_emb, item_emb)
+        return F.binary_cross_entropy_with_logits(logits, labels)
+

@@ -2,7 +2,11 @@ data/raw/*
 data/interim/*
 data/processed/*
 data/artifacts/*
-outputs/results/checkpoints/*
 !data/sample/**
 .venv/
 .DS_Store
+logs/*
+outputs/*
+__pycache__/
+*.pyc
+

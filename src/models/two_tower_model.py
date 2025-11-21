@@ -255,7 +255,7 @@ class TwoTowerModel(nn.Module):
             Similarity scores tensor scaled by logit_scale
         """
         # Clamp logit_scale to reasonable range
-        self.logit_scale.data = torch.clamp(self.logit_scale.data, min=0.01, max=100.0)
+        self.logit_scale.data.clamp_(0.001, 50)
         similarity = torch.mm(user_embeddings, item_embeddings.t())
         return similarity * self.logit_scale
     
@@ -273,7 +273,7 @@ class TwoTowerModel(nn.Module):
             Scaled dot product similarity scores for each pair
         """
         # Clamp logit_scale to reasonable range
-        self.logit_scale.data = torch.clamp(self.logit_scale.data, min=0.01, max=100.0)
+        self.logit_scale.data.clamp_(0.001, 50)
         similarity = torch.sum(user_embeddings * item_embeddings, dim=1)
         return similarity * self.logit_scale
     
