@@ -1,83 +1,184 @@
-1. Artifacts produced by ML
-The ML will deliver five files.
-These constitute the only inputs required by backend.
+1. ML Deliverables
+
+The ML pipeline produces six files.
+These are the only inputs required by the backend service.
 
 ✅ 1. user_emb.npy
 
 Shape: (num_users, embedding_dim)
 
-Type: float32 NumPy array
+Type: float32
 
-Contains user tower output vectors.
+Contains user tower embeddings aligned with uid2idx.json.
 
 ✅ 2. item_emb.npy
 
 Shape: (num_items, embedding_dim)
 
-Type: float32 NumPy array
+Type: float32
 
-Contains item tower output vectors.
+Contains item tower embeddings aligned with iid2idx.json.
 
 ✅ 3. uid2idx.json
 
-Mapping file:
+Maps original user_id → row index in user_emb.npy
 
 {
-  "A3FXXXXXX": 0,
-  "A1ZXXXXXX": 1
+  "AE222BGFMVEFSSH4ECHR5FTL4Z4Q": 0,
+  "AE222P4OK5YOASUSK2YPN5PGZYJA": 1
 }
-
-Maps original user_id → row index in user_emb.npy.
 
 ✅ 4. iid2idx.json
 
-Mapping file:
+Maps original item_id → row index in item_emb.npy
 
 {
   "B0001234": 0,
   "B07XXXXXX": 1
 }
 
-
-Maps item_id → row index in item_emb.npy.
-
 ✅ 5. items_meta.parquet
 
-A table containing metadata for each item index:
+Contains metadata for each item (row order matches item_emb.npy):
 
-item_id	title	image_url	category	brand	…
-B01ABC	…	…	…	…	
+item_id	title	price	images	main_category	average_rating	rating_number	…
 
-Note: Row order must match item_emb.npy.
+Used by frontend to display product cards & detail pages.
 
-2. Where These Files Are Stored
-Machine Learning Core/results/models/
+✅ 6. loader_ready.csv (NEW)
 
-3. Backend responsibility
+This file contains raw user interaction data including review text.
 
-Backend exists under:
+Columns include:
+
+user_id_raw → original Amazon user ID
+
+item_id_raw → original Amazon item/asin
+
+rating
+
+timestamp
+
+item_text → review title + review text (split by [SEP])
+
+This file is used to display user reviews on Product Detail Page.
+
+2. Storage Location
+
+All deliverables are stored in Google Drive:
+
+🔗 https://drive.google.com/drive/folders/1cNMCcMAIGHDSoC6N6BkYM3l6Tw3rCCBP?usp=sharing
+
+3. Backend Responsibilities
+
+Backend code is under:
 
 Backend API/backend/app/
 
+
 Backend is responsible for:
 
-Loading the embeddings & metadata
+✔ Loading the ML outputs:
 
-Building or loading a FAISS index
+user_emb.npy
 
-Implementing recall logic
+item_emb.npy
 
-Exposing REST APIs
+uid2idx.json
 
-Serving data to frontend
+iid2idx.json
+
+items_meta.parquet
+
+loader_ready.csv (for review text)
+
+✔ Building or loading a FAISS index
+✔ Implementing recall logic
+
+Given a user_id → lookup user embedding
+
+FAISS search top-K similar item embeddings
+
+Join item metadata & reviews
+
+Return to frontend
+
+✔ Exposing REST APIs
+
+Example:
+
+GET /recommend?user_id=AE222BGFMVEFSSH4ECHR5FTL4Z4Q
+GET /item/{item_id}
+GET /reviews/{item_id}
+
+✔ Serving metadata & review text to frontend
 
 4. Frontend Integration
-Frontend should display:
+4.1 Product Card (Recommendation List)
 
-product image
+Recommended fields (from items_meta):
 
 title
 
-score
+images[0]
 
-userid
+price
+
+average_rating
+
+rating_number
+
+main_category
+
+These fields give the best lightweight display for a recommendation result.
+
+4.2 Product Detail Page
+
+The Product Detail Page displays enriched metadata and user review content. (from items_meta.parquet)
+
+title
+
+description
+
+features
+
+categories
+
+images[]
+
+store
+
+details
+
+User Reviews (from loader_ready.csv)
+
+For each review corresponding to this item_id:
+
+user_id_raw — reviewer identity
+
+rating — their review rating
+
+review_title — text before [SEP]
+
+review_body — text after [SEP]
+
+Example returned JSON:
+
+{
+  "user_id": "AE222BGFMVEFSSH4ECHR5FTL4Z4Q",
+  "rating": 5,
+  "review_title": "Used it as Bunting",
+  "review_text": "It was great. I did a...",
+  "timestamp": 1677816285
+}
+
+
+These fields allow the frontend to render a realistic Amazon-style review section.
+
+4.3 User Profile Page
+
+User profile includes only:
+
+user_id
+
+(Optionally) a list of items the user has interacted with or rated
